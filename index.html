@@ -1,61 +1,85 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="color-scheme" content="dark">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>DreamInk — Чернила Снов</title>
-  <link href="https://googleapis.com" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}body{background:#06091c;color:#fff;font-family:'Montserrat',sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}#nyan-space{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(15,23,56,.78);backdrop-filter:blur(10px);border-bottom:1px solid rgba(244,114,182,.35)}.brand{font-weight:800;font-size:18px;background:linear-gradient(90deg,#e879f9,#fffb96,#38bdf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.music-btn{background:rgba(236,72,153,.25);border:1px solid #f472b6;color:#fbcfe8;padding:6px 12px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer}.music-btn.playing{background:#ec4899;color:#fff}.workspace{position:relative;z-index:2;display:flex;flex:1;overflow:hidden}.canvas-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;gap:10px}canvas#board{background:#fff;border-radius:16px;box-shadow:0 10px 35px rgba(0,0,0,.65),0 0 20px rgba(244,114,182,.25);touch-action:none;max-width:100%;max-height:calc(100% - 68px)}.toolbar{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:8px;background:rgba(18,25,62,.85);backdrop-filter:blur(10px);padding:8px 14px;border-radius:16px;border:1px solid rgba(168,85,247,.4)}.t-btn{background:#232d6b;border:1px solid #4f5bd5;color:#e2e8f0;padding:7px 11px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}.t-btn.active{background:#ec4899;border-color:#fbcfe8;color:#fff}.slider-group{display:flex;align-items:center;gap:5px;font-size:11px;color:#cbd5e1;background:rgba(10,14,38,.6);padding:4px 8px;border-radius:10px}input[type="range"]{width:65px;accent-color:#f472b6}input[type="color"]{width:32px;height:30px;border:none;border-radius:8px;background:none;cursor:pointer}.profile-sidebar{width:270px;background:rgba(15,22,54,.82);backdrop-filter:blur(12px);border-left:1px solid rgba(244,114,182,.3);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;overflow-y:auto}.avatar-wrap{width:96px;height:96px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#ff71ce,#fffb96,#01cdfe,#b967ff)}.avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#171d47;display:block}.upload-label{background:linear-gradient(135deg,#ec4899,#8b5cf6);color:#fff;padding:8px 14px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;width:100%}.p-input{width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(168,85,247,.45);background:rgba(9,13,36,.8);color:#fff;font-family:'Montserrat',sans-serif;font-size:13px}.save-p-btn{width:100%;padding:10px;border:none;border-radius:12px;background:#22c55e;color:#fff;font-weight:800;font-size:13px;cursor:pointer}.stage-note{margin-top:auto;font-size:11px;color:#94a3b8;text-align:center;background:rgba(255,255,255,.05);padding:10px;border-radius:12px;line-height:1.5}@media(max-width:760px){.workspace{flex-direction:column}.canvas-area{padding:8px}canvas#board{max-height:44vh}.profile-sidebar{width:100%;flex-direction:row;flex-wrap:wrap;justify-content:center;border-left:none;border-top:1px solid rgba(244,114,182,.3);padding:10px;gap:8px}.avatar-wrap{width:54px;height:54px}.upload-label,.save-p-btn{width:auto;padding:7px 10px}.p-input{width:140px;padding:7px 10px}.stage-note{display:none}}
-  </style>
+<meta charset="UTF-8"><meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>DreamInk</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#06091c;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+#ns{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+header{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(15,23,56,.8);border-bottom:1px solid #f472b6}
+.brand{font-weight:800;font-size:18px;color:#f0abfc}
+.mbtn{background:#db2777;border:0;color:#fff;padding:6px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+.ws{position:relative;z-index:2;display:flex;flex:1;overflow:hidden}
+.ca{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;gap:8px}
+canvas#b{background:#fff;border-radius:14px;touch-action:none;max-width:100%;max-height:calc(100% - 60px)}
+.tb{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;background:rgba(18,25,62,.9);padding:8px;border-radius:14px}
+.btn{background:#232d6b;border:1px solid #6366f1;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+.btn.act{background:#ec4899}
+.sg{display:flex;align-items:center;gap:4px;font-size:11px;background:#0a0e26;padding:4px 8px;border-radius:8px}
+input[type=range]{width:60px;accent-color:#f472b6}
+.sb{width:250px;background:rgba(15,22,54,.85);border-left:1px solid #f472b6;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.av{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #ec4899;background:#1e1b4b}
+.ul{background:#9333ea;color:#fff;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
+.pi{width:100%;padding:8px;border-radius:8px;border:1px solid #7c3aed;background:#090d24;color:#fff}
+.sp{width:100%;padding:9px;border:0;border-radius:10px;background:#22c55e;color:#fff;font-weight:700;cursor:pointer}
+@media(max-width:760px){.ws{flex-direction:column}canvas#b{max-height:42vh}.sb{width:100%;flex-direction:row;flex-wrap:wrap;justify-content:center;border-left:0;border-top:1px solid #f472b6}.av{width:50px;height:50px}.pi{width:130px}}
+</style>
 </head>
 <body>
-  <canvas id="nyan-space"></canvas>
-  <header>
-    <div class="brand">🌙 DreamInk</div>
-    <button class="music-btn" id="music-toggle" onclick="toggleNyanMusic()">🎵 Звук снов: Выкл</button>
-  </header>
-  <div class="workspace">
-    <div class="canvas-area">
-      <canvas id="board" width="720" height="480"></canvas>
-      <div class="toolbar">
-        <button class="t-btn active" id="btn-brush" onclick="setMode('brush')">🖌️ Кисть</button>
-        <button class="t-btn" id="btn-eraser" onclick="setMode('eraser')">🧽 Ластик</button>
-        <input type="color" id="color-pick" value="#ec4899" title="Цвет">
-        <div class="slider-group"><span>Размер:</span><input type="range" id="size-pick" min="1" max="50" value="8"><span id="size-val">8</span></div>
-        <div class="slider-group"><span>Прозрачн.:</span><input type="range" id="alpha-pick" min="10" max="100" value="100"><span id="alpha-val">100%</span></div>
-        <button class="t-btn" onclick="undo()">↩ Назад</button>
-        <button class="t-btn" onclick="clearBoard()">🗑️ Очистить</button>
-        <button class="t-btn" onclick="downloadArt()">💾 Скачать</button>
-      </div>
-    </div>
-    <aside class="profile-sidebar">
-      <div class="avatar-wrap"><img id="p-avatar" class="avatar-img" src="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23251b4d'/><text x='50' y='64' font-size='48' text-anchor='middle'>🌙</text></svg>"></div>
-      <label class="upload-label">📁 Аватар / GIF<input type="file" id="p-file" accept="image/*" style="display:none"></label>
-      <input type="text" id="p-nick" class="p-input" placeholder="Твой ник...">
-      <input type="text" id="p-bio" class="p-input" placeholder="Статус (например: В мире снов)">
-      <button class="save-p-btn" id="p-save" onclick="saveProfile()">✓ Сохранить профиль</button>
-      <div class="stage-note">🌙 <b>DreamInk v1.0</b><br>На Этапе 2 подключим комнаты с друзьями, чат, звонки и мини-игры!</div>
-    </aside>
-  </div>
-  <script>
-    const bg=document.getElementById('nyan-space'),bctx=bg.getContext('2d');let bw,bh,stars=[];
-    function resizeBg(){bw=bg.width=innerWidth;bh=bg.height=innerHeight}addEventListener('resize',resizeBg);resizeBg();
-    for(let i=0;i<90;i++)stars.push({x:Math.random()*bw,y:Math.random()*bh,s:Math.random()*2.5+1,v:Math.random()*1.8+.6});
-    let nyanX=-150,frame=0;const rc=['#ff0000','#ff9900','#ffff00','#33ff00','#0099ff','#6633ff'];
-    function drawNyan(x,y,t){const w=Math.sin(t*.15)*4;for(let s=0;s<18;s++){const sx=x-s*14,sy=y+Math.sin(t*.15-s*.5)*6;for(let c=0;c<6;c++){bctx.fillStyle=rc[c];bctx.fillRect(sx-14,sy-18+c*6,15,6)}}const ls=Math.sin(t*.25)*3;bctx.fillStyle='#999';bctx.fillRect(x-16+ls,y+16,8,7);bctx.fillRect(x+12-ls,y+16,8,7);bctx.fillStyle='#ffcc99';bctx.fillRect(x-22,y-20+w,44,38);bctx.fillStyle='#ff66cc';bctx.fillRect(x-18,y-16+w,36,30);bctx.fillStyle='#ff0066';bctx.fillRect(x-12,y-10+w,4,4);bctx.fillRect(x+4,y-12+w,4,4);bctx.fillRect(x-6,y+4+w,4,4);bctx.fillRect(x+8,y+2+w,4,4);const hx=x+16,hy=y-4+w;bctx.fillStyle='#999';bctx.fillRect(hx-12,hy-10,26,20);bctx.fillRect(hx-12,hy-16,6,6);bctx.fillRect(hx+8,hy-16,6,6);bctx.fillStyle='#000';bctx.fillRect(hx-6,hy-3,3,3);bctx.fillRect(hx+6,hy-3,3,3);bctx.fillStyle='#ff6699';bctx.fillRect(hx-10,hy+2,4,3);bctx.fillRect(hx+9,hy+2,4,3)}
-    (function loop(){bctx.fillStyle='#070b24';bctx.fillRect(0,0,bw,bh);bctx.fillStyle='#fff';stars.forEach(st=>{st.x-=st.v;if(st.x<0){st.x=bw;st.y=Math.random()*bh}bctx.fillRect(st.x,st.y,st.s,st.s)});nyanX+=2.2;if(nyanX>bw+280)nyanX=-120;drawNyan(nyanX,bh*.22,frame++);requestAnimationFrame(loop)})();
-    let mt=null,ni=0;const notes=[659,740,523,587,494,587,523,494,494,587,659,659,587,494,523,587,659,587,740,659,587,740,659,587];
-    function toggleNyanMusic(){const b=document.getElementById('music-toggle');if(mt){clearInterval(mt);mt=null;b.textContent='🎵 Звук снов: Выкл';b.classList.remove('playing')}else{b.textContent='🎵 Звук снов: Вкл';b.classList.add('playing');const ac=new(AudioContext||webkitAudioContext)();mt=setInterval(()=>{const f=notes[ni%notes.length];if(f>0){const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.05,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.14);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.14)}ni++},160)}}
-    const board=document.getElementById('board'),ctx=board.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,board.width,board.height);
-    let draw=false,mode='brush',steps=[],lx=0,ly=0;pushStep();
-    const sp=document.getElementById('size-pick'),ap=document.getElementById('alpha-pick');
-    sp.oninput=()=>document.getElementById('size-val').textContent=sp.value;
-    ap.oninput=()=>document.getElementById('alpha-val').textContent=ap.value+'%';
-    function pushStep(){if(steps.length>20)steps.shift();steps.push(board.toDataURL())}
-    function undo(){if(steps.length<=1)return;steps.pop();const img=new Image();img.onload=()=>{ctx.globalAlpha=1;ctx.clearRect(0,0,board.width,board.height);ctx.drawImage(img,0,0)};img.src=steps[steps.length-1]}
-    function setMode(m){mode=m;document.getElementById('btn-brush').classList.toggle('active',m==='brush');document.getElementById('btn-eraser').classList.toggle('active',m==='eraser')}
-    function gc(e){const r=board.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(board.width/r.width),y:(cy-r.top)*(board.height/r.height)}}
-    function start(e){draw=true;const c=gc(e);lx=c.x;ly=c.y;move(e)}
-    function move(e){if(!draw)return;e.preventDefault();const c=gc(e);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=sp.value;ctx.globalAlpha=mode==='eraser'?1:(ap.value/100);ctx.strokeStyle=mode==='eraser'?'#fff':document.getElementById('color-pick').value;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(c.x,c.y);ctx.stroke();lx=c.x;ly=c.y}
+<canvas id="ns"></canvas>
+<header><div class="brand">🌙 DreamInk</div><button class="mbtn" id="mt" onclick="tMus()">🎵 Звук: Выкл</button></header>
+<div class="ws">
+<div class="ca">
+<canvas id="b" width="700" height="460"></canvas>
+<div class="tb">
+<button class="btn act" id="bb" onclick="sMod('b')">🖌️ Кисть</button>
+<button class="btn" id="be" onclick="sMod('e')">🧽 Ластик</button>
+<input type="color" id="cp" value="#ec4899">
+<div class="sg">Размер<input type="range" id="sz" min="1" max="50" value="8"><span id="sv">8</span></div>
+<div class="sg">Прозр.<input type="range" id="al" min="10" max="100" value="100"><span id="av2">100%</span></div>
+<button class="btn" onclick="un()">↩</button>
+<button class="btn" onclick="cl()">🗑️</button>
+<button class="btn" onclick="dl()">💾</button>
+</div>
+</div>
+<aside class="sb">
+<img id="pa" class="av" src="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23251b4d'/><text x='50' y='65' font-size='50' text-anchor='middle'>🌙</text></svg>">
+<label class="ul">📁 Аватар / GIF<input type="file" id="pf" accept="image/*" hidden></label>
+<input type="text" id="pn" class="pi" placeholder="Ник...">
+<input type="text" id="pb" class="pi" placeholder="Статус...">
+<button class="sp" id="ps" onclick="sProf()">✓ Сохранить</button>
+</aside>
+</div>
+<script>
+const bg=document.getElementById('ns'),bx=bg.getContext('2d');let bw,bh,st=new Array();
+function rs(){bw=bg.width=innerWidth;bh=bg.height=innerHeight}addEventListener('resize',rs);rs();
+for(let i=0;i<80;i++)st.push({x:Math.random()*bw,y:Math.random()*bh,s:2,v:1.5});
+let nx=-120,fr=0;const rc=new Array('#f00','#f90','#ff0','#3f0','#09f','#63f');
+function dNyan(x,y,t){const w=Math.sin(t*.15)*4;for(let s=0;s<16;s++){const sx=x-s*14,sy=y+Math.sin(t*.15-s*.5)*6;for(let c=0;c<6;c++){bx.fillStyle=rc.at(c);bx.fillRect(sx-14,sy-18+c*6,15,6)}}bx.fillStyle='#fc9';bx.fillRect(x-20,y-18+w,40,34);bx.fillStyle='#f6c';bx.fillRect(x-16,y-14+w,32,26);bx.fillStyle='#999';bx.fillRect(x+6,y-12+w,22,18);bx.fillRect(x+6,y-17+w,5,5);bx.fillRect(x+23,y-17+w,5,5);bx.fillStyle='#000';bx.fillRect(x+11,y-6+w,3,3);bx.fillRect(x+21,y-6+w,3,3)}
+(function lp(){bx.fillStyle='#070b24';bx.fillRect(0,0,bw,bh);bx.fillStyle='#fff';st.forEach(s=>{s.x-=s.v;if(s.x<0)s.x=bw;bx.fillRect(s.x,s.y,s.s,s.s)});nx+=2.2;if(nx>bw+240)nx=-100;dNyan(nx,bh*.2,fr++);requestAnimationFrame(lp)})();
+let mti=null,ni=0;const nt=new Array(622,659,740,0,987,659,622,659,740,987,1108,1244,1108,932,987,740);
+function tMus(){const b=document.getElementById('mt');if(mti){clearInterval(mti);mti=null;b.textContent='🎵 Звук: Выкл'}else{b.textContent='🎵 Звук: Вкл';const ac=new(AudioContext||webkitAudioContext)();mti=setInterval(()=>{const f=nt.at(ni%nt.length);if(f>0){const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=f;g.gain.value=.04;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.12)}ni++},160)}}
+const bd=document.getElementById('b'),cx=bd.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,700,460);
+let dr=false,md='b',hs=new Array(),lx=0,ly=0;ps();
+const sz=document.getElementById('sz'),al=document.getElementById('al');
+sz.oninput=()=>document.getElementById('sv').textContent=sz.value;
+al.oninput=()=>document.getElementById('av2').textContent=al.value+'%';
+function ps(){if(hs.length>15)hs.shift();hs.push(bd.toDataURL())}
+function un(){if(hs.length<=1)return;hs.pop();const i=new Image();i.onload=()=>{cx.globalAlpha=1;cx.clearRect(0,0,700,460);cx.drawImage(i,0,0)};i.src=hs.at(-1)}
+function sMod(m){md=m;document.getElementById('bb').classList.toggle('act',m==='b');document.getElementById('be').classList.toggle('act',m==='e')}
+function gc(e){const r=bd.getBoundingClientRect(),x=e.touches?e.touches.item(0).clientX:e.clientX,y=e.touches?e.touches.item(0).clientY:e.clientY;return{x:(x-r.left)*(700/r.width),y:(y-r.top)*(460/r.height)}}
+function stD(e){dr=true;const c=gc(e);lx=c.x;ly=c.y;mvD(e)}
+function mvD(e){if(!dr)return;e.preventDefault();const c=gc(e);cx.lineCap='round';cx.lineJoin='round';cx.lineWidth=sz.value;cx.globalAlpha=md==='e'?1:al.value/100;cx.strokeStyle=md==='e'?'#fff':document.getElementById('cp').value;cx.beginPath();cx.moveTo(lx,ly);cx.lineTo(c.x,c.y);cx.stroke();lx=c.x;ly=c.y}
+function enD(){if(!dr)return;dr=false;cx.globalAlpha=1;ps()}
+bd.onmousedown=stD;bd.onmousemove=mvD;onmouseup=enD;bd.ontouchstart=stD;bd.ontouchmove=mvD;ontouchend=enD;
+function cl(){cx.globalAlpha=1;cx.fillStyle='#fff';cx.fillRect(0,0,700,460);ps()}
+function dl(){const a=document.createElement('a');a.download='dreamink.png';a.href=bd.toDataURL();a.click()}
+const pn=document.getElementById('pn'),pb=document.getElementById('pb'),pa=document.getElementById('pa');
+pn.value=localStorage.getItem('di_n')||'';pb.value=localStorage.getItem('di_b')||'';if(localStorage.getItem('di_a'))pa.src=localStorage.getItem('di_a');
+document.getElementById('pf').onchange=e=>{const f=e.target.files.item(0);if(!f)return;const r=new FileReader();r.onload=()=>{pa.src=r.result;localStorage.setItem('di_a',r.result)};r.readAsDataURL(f)};
+function sProf(){localStorage.setItem('di_n',pn.value);localStorage.setItem('di_b',pb.value);const b=document.getElementById('ps');b.textContent='✨ Готово!';setTimeout(()=>b.textContent='✓ Сохранить',1500)}
+</script>
+</body>
+</html>
