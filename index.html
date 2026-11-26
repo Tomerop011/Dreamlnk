@@ -6,80 +6,108 @@
 <title>DreamInk</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#06091c;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-#ns{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-header{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(15,23,56,.8);border-bottom:1px solid #f472b6}
-.brand{font-weight:800;font-size:18px;color:#f0abfc}
-.mbtn{background:#db2777;border:0;color:#fff;padding:6px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+body{background:#05081a;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.space{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,#141c4d,#05081a 75%);overflow:hidden}
+.nyan-gif{position:absolute;top:14%;left:-160px;width:140px;animation:fly 14s linear infinite;pointer-events:none}
+@keyframes fly{0%{transform:translateX(0)}100%{transform:translateX(calc(100vw + 320px))}}
+header{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(12,18,48,.85);border-bottom:1px solid #f472b6}
+.brand{font-weight:800;font-size:17px;color:#f0abfc}
+.fbtn{background:#7c3aed;border:0;color:#fff;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
 .ws{position:relative;z-index:2;display:flex;flex:1;overflow:hidden}
-.ca{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;gap:8px}
-canvas#b{background:#fff;border-radius:14px;touch-action:none;max-width:100%;max-height:calc(100% - 60px)}
-.tb{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;background:rgba(18,25,62,.9);padding:8px;border-radius:14px}
-.btn{background:#232d6b;border:1px solid #6366f1;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
-.btn.act{background:#ec4899}
-.sg{display:flex;align-items:center;gap:4px;font-size:11px;background:#0a0e26;padding:4px 8px;border-radius:8px}
-input[type=range]{width:60px;accent-color:#f472b6}
-.sb{width:250px;background:rgba(15,22,54,.85);border-left:1px solid #f472b6;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.av{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #ec4899;background:#1e1b4b}
-.ul{background:#9333ea;color:#fff;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
-.pi{width:100%;padding:8px;border-radius:8px;border:1px solid #7c3aed;background:#090d24;color:#fff}
-.sp{width:100%;padding:9px;border:0;border-radius:10px;background:#22c55e;color:#fff;font-weight:700;cursor:pointer}
-@media(max-width:760px){.ws{flex-direction:column}canvas#b{max-height:42vh}.sb{width:100%;flex-direction:row;flex-wrap:wrap;justify-content:center;border-left:0;border-top:1px solid #f472b6}.av{width:50px;height:50px}.pi{width:130px}}
+.ca{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:6px}
+canvas#b{background:#fff;border-radius:14px;touch-action:none;max-width:100%;max-height:calc(100% - 62px);box-shadow:0 8px 25px rgba(0,0,0,.6)}
+.tb{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;background:rgba(15,22,56,.9);padding:6px 8px;border-radius:12px}
+.btn{background:#232d6b;border:1px solid #6366f1;color:#fff;padding:5px 8px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer}
+.btn.act{background:#ec4899;border-color:#fbcfe8}
+.sg{display:flex;align-items:center;gap:3px;font-size:10px;background:#0a0e26;padding:3px 6px;border-radius:8px}
+input.rng{width:48px;accent-color:#f472b6}
+.sb{width:270px;background:rgba(12,18,48,.88);border-left:1px solid #f472b6;display:flex;flex-direction:column;padding:10px;gap:8px}
+.prof{display:flex;align-items:center;gap:8px;background:#192259;padding:6px;border-radius:12px}
+.av{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #ec4899;background:#312e81;flex-shrink:0}
+.pi{width:100%;padding:6px 8px;border-radius:8px;border:1px solid #7c3aed;background:#090d24;color:#fff;font-size:12px}
+.ul{background:#9333ea;color:#fff;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chat{flex:1;background:#090d24;border:1px solid #312e81;border-radius:10px;padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;font-size:12px}
+.msg{display:flex;gap:6px;align-items:flex-start;background:#161e4d;padding:5px 7px;border-radius:8px}
+.msg img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+.cinp{display:flex;gap:4px}
+.cinp input{flex:1;padding:6px 8px;border-radius:8px;border:1px solid #6366f1;background:#090d24;color:#fff;font-size:12px}
+.cinp button{background:#ec4899;border:0;color:#fff;padding:0 10px;border-radius:8px;font-weight:700;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99;align-items:center;justify-content:center}
+.mcard{background:#151d4a;border:1px solid #ec4899;border-radius:16px;padding:16px;width:290px;display:flex;flex-direction:column;gap:8px}
+@media(max-width:760px){.ws{flex-direction:column}canvas#b{max-height:38vh}.sb{width:100%;height:38vh;border-left:0;border-top:1px solid #f472b6}}
 </style>
 </head>
 <body>
-<canvas id="ns"></canvas>
-<header><div class="brand">🌙 DreamInk</div><button class="mbtn" id="mt" onclick="tMus()">🎵 Звук: Выкл</button></header>
+<div class="space"><img class="nyan-gif" src="https://giphy.com" alt="Nyan"></div>
+<header>
+  <div class="brand">🌙 DreamInk</div>
+  <button class="fbtn" onclick="openFr()">👥 Друзья (<span id="fc">0</span>)</button>
+</header>
 <div class="ws">
-<div class="ca">
-<canvas id="b" width="700" height="460"></canvas>
-<div class="tb">
-<button class="btn act" id="bb" onclick="sMod('b')">🖌️ Кисть</button>
-<button class="btn" id="be" onclick="sMod('e')">🧽 Ластик</button>
-<input type="color" id="cp" value="#ec4899">
-<div class="sg">Размер<input type="range" id="sz" min="1" max="50" value="8"><span id="sv">8</span></div>
-<div class="sg">Прозр.<input type="range" id="al" min="10" max="100" value="100"><span id="av2">100%</span></div>
-<button class="btn" onclick="un()">↩</button>
-<button class="btn" onclick="cl()">🗑️</button>
-<button class="btn" onclick="dl()">💾</button>
+  <div class="ca">
+    <canvas id="b" width="700" height="460"></canvas>
+    <div class="tb">
+      <button class="btn act" id="bb" onclick="sMod('b')">🖌️ Кисть</button>
+      <button class="btn" id="bn" onclick="sMod('n')">✨ Неон</button>
+      <button class="btn" id="bs" onclick="sMod('s')">💨 Спрей</button>
+      <button class="btn" id="be" onclick="sMod('e')">🧽 Ластик</button>
+      <input type="color" id="cp" value="#ec4899">
+      <div class="sg">Разм<input class="rng" type="range" id="sz" min="1" max="50" value="8"><span id="sv">8</span></div>
+      <div class="sg">Прозр<input class="rng" type="range" id="al" min="10" max="100" value="100"><span id="av2">100%</span></div>
+      <button class="btn" onclick="un()">↩</button>
+      <button class="btn" onclick="cl()">🗑️</button>
+      <button class="btn" onclick="dl()">💾</button>
+    </div>
+  </div>
+  <aside class="sb">
+    <div class="prof">
+      <img id="pa" class="av">
+      <input type="text" id="pn" class="pi" placeholder="Твой ник..." onchange="sProf()">
+      <label class="ul">GIF<input type="file" id="pf" accept="image/*" hidden></label>
+    </div>
+    <div class="chat" id="cb"></div>
+    <div class="cinp">
+      <input type="text" id="mi" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')sMsg()">
+      <button onclick="sMsg()">➤</button>
+    </div>
+  </aside>
 </div>
-</div>
-<aside class="sb">
-<img id="pa" class="av" src="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23251b4d'/><text x='50' y='65' font-size='50' text-anchor='middle'>🌙</text></svg>">
-<label class="ul">📁 Аватар / GIF<input type="file" id="pf" accept="image/*" hidden></label>
-<input type="text" id="pn" class="pi" placeholder="Ник...">
-<input type="text" id="pb" class="pi" placeholder="Статус...">
-<button class="sp" id="ps" onclick="sProf()">✓ Сохранить</button>
-</aside>
+<div class="modal" id="fm">
+  <div class="mcard">
+    <h3 style="color:#f0abfc;font-size:15px">👥 Поиск и друзья</h3>
+    <div style="display:flex;gap:4px"><input type="text" id="fi" class="pi" placeholder="Ник друга..."><button class="fbtn" onclick="addFr()">+ Добавить</button></div>
+    <div id="fl" style="font-size:12px;color:#cbd5e1;max-height:120px;overflow-y:auto"></div>
+    <button class="fbtn" style="background:#334155" onclick="document.getElementById('fm').style.display='none'">Закрыть</button>
+  </div>
 </div>
 <script>
-const bg=document.getElementById('ns'),bx=bg.getContext('2d');let bw,bh,st=new Array();
-function rs(){bw=bg.width=innerWidth;bh=bg.height=innerHeight}addEventListener('resize',rs);rs();
-for(let i=0;i<80;i++)st.push({x:Math.random()*bw,y:Math.random()*bh,s:2,v:1.5});
-let nx=-120,fr=0;const rc=new Array('#f00','#f90','#ff0','#3f0','#09f','#63f');
-function dNyan(x,y,t){const w=Math.sin(t*.15)*4;for(let s=0;s<16;s++){const sx=x-s*14,sy=y+Math.sin(t*.15-s*.5)*6;for(let c=0;c<6;c++){bx.fillStyle=rc.at(c);bx.fillRect(sx-14,sy-18+c*6,15,6)}}bx.fillStyle='#fc9';bx.fillRect(x-20,y-18+w,40,34);bx.fillStyle='#f6c';bx.fillRect(x-16,y-14+w,32,26);bx.fillStyle='#999';bx.fillRect(x+6,y-12+w,22,18);bx.fillRect(x+6,y-17+w,5,5);bx.fillRect(x+23,y-17+w,5,5);bx.fillStyle='#000';bx.fillRect(x+11,y-6+w,3,3);bx.fillRect(x+21,y-6+w,3,3)}
-(function lp(){bx.fillStyle='#070b24';bx.fillRect(0,0,bw,bh);bx.fillStyle='#fff';st.forEach(s=>{s.x-=s.v;if(s.x<0)s.x=bw;bx.fillRect(s.x,s.y,s.s,s.s)});nx+=2.2;if(nx>bw+240)nx=-100;dNyan(nx,bh*.2,fr++);requestAnimationFrame(lp)})();
-let mti=null,ni=0;const nt=new Array(622,659,740,0,987,659,622,659,740,987,1108,1244,1108,932,987,740);
-function tMus(){const b=document.getElementById('mt');if(mti){clearInterval(mti);mti=null;b.textContent='🎵 Звук: Выкл'}else{b.textContent='🎵 Звук: Вкл';const ac=new(AudioContext||webkitAudioContext)();mti=setInterval(()=>{const f=nt.at(ni%nt.length);if(f>0){const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=f;g.gain.value=.04;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.12)}ni++},160)}}
+const defAv="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23312e81'/><circle cx='50' cy='50' r='26' fill='%23facc15'/><circle cx='62' cy='42' r='22' fill='%23312e81'/></svg>";
+const pn=document.getElementById('pn'),pa=document.getElementById('pa');
+pn.value=localStorage.getItem('di_n')||'Игрок';pa.src=localStorage.getItem('di_a')||defAv;
+function sProf(){localStorage.setItem('di_n',pn.value.trim()||'Игрок')}
+document.getElementById('pf').onchange=e=>{const f=e.target.files.item(0);if(!f)return;const r=new FileReader();r.onload=()=>{pa.src=r.result;localStorage.setItem('di_a',r.result)};r.readAsDataURL(f)};
 const bd=document.getElementById('b'),cx=bd.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,700,460);
 let dr=false,md='b',hs=new Array(),lx=0,ly=0;ps();
 const sz=document.getElementById('sz'),al=document.getElementById('al');
 sz.oninput=()=>document.getElementById('sv').textContent=sz.value;
 al.oninput=()=>document.getElementById('av2').textContent=al.value+'%';
 function ps(){if(hs.length>15)hs.shift();hs.push(bd.toDataURL())}
-function un(){if(hs.length<=1)return;hs.pop();const i=new Image();i.onload=()=>{cx.globalAlpha=1;cx.clearRect(0,0,700,460);cx.drawImage(i,0,0)};i.src=hs.at(-1)}
-function sMod(m){md=m;document.getElementById('bb').classList.toggle('act',m==='b');document.getElementById('be').classList.toggle('act',m==='e')}
+function un(){if(hs.length<=1)return;hs.pop();const i=new Image();i.onload=()=>{cx.globalAlpha=1;cx.shadowBlur=0;cx.clearRect(0,0,700,460);cx.drawImage(i,0,0)};i.src=hs.at(-1)}
+function sMod(m){md=m;document.querySelectorAll('.tb .btn').forEach(b=>b.classList.remove('act'));document.getElementById('b'+m).classList.add('act')}
 function gc(e){const r=bd.getBoundingClientRect(),x=e.touches?e.touches.item(0).clientX:e.clientX,y=e.touches?e.touches.item(0).clientY:e.clientY;return{x:(x-r.left)*(700/r.width),y:(y-r.top)*(460/r.height)}}
 function stD(e){dr=true;const c=gc(e);lx=c.x;ly=c.y;mvD(e)}
-function mvD(e){if(!dr)return;e.preventDefault();const c=gc(e);cx.lineCap='round';cx.lineJoin='round';cx.lineWidth=sz.value;cx.globalAlpha=md==='e'?1:al.value/100;cx.strokeStyle=md==='e'?'#fff':document.getElementById('cp').value;cx.beginPath();cx.moveTo(lx,ly);cx.lineTo(c.x,c.y);cx.stroke();lx=c.x;ly=c.y}
-function enD(){if(!dr)return;dr=false;cx.globalAlpha=1;ps()}
+function mvD(e){if(!dr)return;e.preventDefault();const c=gc(e),col=document.getElementById('cp').value,s=sz.value;cx.lineCap='round';cx.lineJoin='round';cx.shadowBlur=0;cx.globalAlpha=md==='e'?1:al.value/100;if(md==='s'){cx.fillStyle=col;for(let i=0;i<18;i++)cx.fillRect(c.x+(Math.random()-.5)*s*2,c.y+(Math.random()-.5)*s*2,1.5,1.5);return}cx.lineWidth=s;if(md==='n'){cx.strokeStyle='#fff';cx.shadowColor=col;cx.shadowBlur=s*1.5}else cx.strokeStyle=md==='e'?'#fff':col;cx.beginPath();cx.moveTo(lx,ly);cx.lineTo(c.x,c.y);cx.stroke();lx=c.x;ly=c.y}
+function enD(){if(!dr)return;dr=false;cx.globalAlpha=1;cx.shadowBlur=0;ps()}
 bd.onmousedown=stD;bd.onmousemove=mvD;onmouseup=enD;bd.ontouchstart=stD;bd.ontouchmove=mvD;ontouchend=enD;
-function cl(){cx.globalAlpha=1;cx.fillStyle='#fff';cx.fillRect(0,0,700,460);ps()}
+function cl(){cx.globalAlpha=1;cx.shadowBlur=0;cx.fillStyle='#fff';cx.fillRect(0,0,700,460);ps()}
 function dl(){const a=document.createElement('a');a.download='dreamink.png';a.href=bd.toDataURL();a.click()}
-const pn=document.getElementById('pn'),pb=document.getElementById('pb'),pa=document.getElementById('pa');
-pn.value=localStorage.getItem('di_n')||'';pb.value=localStorage.getItem('di_b')||'';if(localStorage.getItem('di_a'))pa.src=localStorage.getItem('di_a');
-document.getElementById('pf').onchange=e=>{const f=e.target.files.item(0);if(!f)return;const r=new FileReader();r.onload=()=>{pa.src=r.result;localStorage.setItem('di_a',r.result)};r.readAsDataURL(f)};
-function sProf(){localStorage.setItem('di_n',pn.value);localStorage.setItem('di_b',pb.value);const b=document.getElementById('ps');b.textContent='✨ Готово!';setTimeout(()=>b.textContent='✓ Сохранить',1500)}
+function addMsg(n,t,av){const cb=document.getElementById('cb'),d=document.createElement('div');d.className='msg';d.innerHTML=`<img src="${av}"><div><b style="color:#f0abfc;font-size:11px">${n}</b><div>${t}</div></div>`;cb.appendChild(d);cb.scrollTop=cb.scrollHeight}
+function sMsg(){const i=document.getElementById('mi');if(!i.value.trim())return;addMsg(pn.value||'Игрок',i.value.trim(),pa.src);i.value=''}
+const rawFr=localStorage.getItem('di_f');let frs=rawFr?rawFr.split('|').filter(Boolean):new Array();document.getElementById('fc').textContent=frs.length;
+function openFr(){document.getElementById('fm').style.display='flex';rFr()}
+function addFr(){const v=document.getElementById('fi').value.trim();if(!v)return;frs.push(v);localStorage.setItem('di_f',frs.join('|'));document.getElementById('fi').value='';document.getElementById('fc').textContent=frs.length;rFr();addMsg('Система',`Заявка в друзья отправлена: ${v} 💌`,defAv)}
+function rFr(){document.getElementById('fl').innerHTML=frs.length?frs.map(f=>`<div style="padding:4px 0;border-bottom:1px solid #312e81">🌙 ${f} <span style="color:#4ade80">(в списке)</span></div>`).join(''):'Пока нет друзей — введи ник выше!'}
+addMsg('DreamInk','Добро пожаловать! На Этапе 2 подключим онлайн-чат с друзьями 🌙',defAv);
 </script>
 </body>
 </html>
