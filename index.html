@@ -46,7 +46,7 @@
     let nyanX=-150,frame=0;const rc=['#ff0000','#ff9900','#ffff00','#33ff00','#0099ff','#6633ff'];
     function drawNyan(x,y,t){const w=Math.sin(t*.15)*4;for(let s=0;s<18;s++){const sx=x-s*14,sy=y+Math.sin(t*.15-s*.5)*6;for(let c=0;c<6;c++){bctx.fillStyle=rc[c];bctx.fillRect(sx-14,sy-18+c*6,15,6)}}const ls=Math.sin(t*.25)*3;bctx.fillStyle='#999';bctx.fillRect(x-16+ls,y+16,8,7);bctx.fillRect(x+12-ls,y+16,8,7);bctx.fillStyle='#ffcc99';bctx.fillRect(x-22,y-20+w,44,38);bctx.fillStyle='#ff66cc';bctx.fillRect(x-18,y-16+w,36,30);bctx.fillStyle='#ff0066';bctx.fillRect(x-12,y-10+w,4,4);bctx.fillRect(x+4,y-12+w,4,4);bctx.fillRect(x-6,y+4+w,4,4);bctx.fillRect(x+8,y+2+w,4,4);const hx=x+16,hy=y-4+w;bctx.fillStyle='#999';bctx.fillRect(hx-12,hy-10,26,20);bctx.fillRect(hx-12,hy-16,6,6);bctx.fillRect(hx+8,hy-16,6,6);bctx.fillStyle='#000';bctx.fillRect(hx-6,hy-3,3,3);bctx.fillRect(hx+6,hy-3,3,3);bctx.fillStyle='#ff6699';bctx.fillRect(hx-10,hy+2,4,3);bctx.fillRect(hx+9,hy+2,4,3)}
     (function loop(){bctx.fillStyle='#070b24';bctx.fillRect(0,0,bw,bh);bctx.fillStyle='#fff';stars.forEach(st=>{st.x-=st.v;if(st.x<0){st.x=bw;st.y=Math.random()*bh}bctx.fillRect(st.x,st.y,st.s,st.s)});nyanX+=2.2;if(nyanX>bw+280)nyanX=-120;drawNyan(nyanX,bh*.22,frame++);requestAnimationFrame(loop)})();
-    let mt=null,ni=0;const notes=[622,659,740,0,987,659,622,659,740,987,1108,987,1108,1244];
+    let mt=null,ni=0;const notes=[659,740,523,587,494,587,523,494,494,587,659,659,587,494,523,587,659,587,740,659,587,740,659,587];
     function toggleNyanMusic(){const b=document.getElementById('music-toggle');if(mt){clearInterval(mt);mt=null;b.textContent='🎵 Звук снов: Выкл';b.classList.remove('playing')}else{b.textContent='🎵 Звук снов: Вкл';b.classList.add('playing');const ac=new(AudioContext||webkitAudioContext)();mt=setInterval(()=>{const f=notes[ni%notes.length];if(f>0){const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.05,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.14);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.14)}ni++},160)}}
     const board=document.getElementById('board'),ctx=board.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,board.width,board.height);
     let draw=false,mode='brush',steps=[],lx=0,ly=0;pushStep();
@@ -59,13 +59,3 @@
     function gc(e){const r=board.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(board.width/r.width),y:(cy-r.top)*(board.height/r.height)}}
     function start(e){draw=true;const c=gc(e);lx=c.x;ly=c.y;move(e)}
     function move(e){if(!draw)return;e.preventDefault();const c=gc(e);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=sp.value;ctx.globalAlpha=mode==='eraser'?1:(ap.value/100);ctx.strokeStyle=mode==='eraser'?'#fff':document.getElementById('color-pick').value;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(c.x,c.y);ctx.stroke();lx=c.x;ly=c.y}
-        function end(){if(!draw)return;draw=false;ctx.globalAlpha=1;pushStep()}
-board.addEventListener('mousedown',start);board.addEventListener('mousemove',move);addEventListener('mouseup',end);
-board.addEventListener('touchstart',start,{passive:false});board.addEventListener('touchmove',move,{passive:false});addEventListener('touchend',end);
-function clearBoard(){ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.fillRect(0,0,board.width,board.height);pushStep()}
-function downloadArt(){const l=document.createElement('a');l.download='dreamink-art.png';l.href=board.toDataURL();l.click()}
-const pn=document.getElementById('p-nick'),pb=document.getElementById('p-bio'),pa=document.getElementById('p-avatar');
-pn.value=localStorage.getItem('di_nick')||'';pb.value=localStorage.getItem('di_bio')||'';
-if(localStorage.getItem('di_ava'))pa.src=localStorage.getItem('di_ava');
-document.getElementById('p-file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{pa.src=r.result;localStorage.setItem('di_ava',r.result)};r.readAsDataURL(f)};
-function saveProfile(){localStorage.setItem('di_nick',pn.value.trim());localStorage.setItem('di_bio',pb.value.trim());const b=document.getElementById('p-save');b.textContent='✨ Сохранено!';setTimeout(()=>b.textContent='✓ Сохранить профиль',1800)}
