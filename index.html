@@ -6,108 +6,104 @@
 <title>DreamInk</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#05081a;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.space{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,#141c4d,#05081a 75%);overflow:hidden}
-.nyan-gif{position:absolute;top:14%;left:-160px;width:140px;animation:fly 14s linear infinite;pointer-events:none}
-@keyframes fly{0%{transform:translateX(0)}100%{transform:translateX(calc(100vw + 320px))}}
-header{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(12,18,48,.85);border-bottom:1px solid #f472b6}
-.brand{font-weight:800;font-size:17px;color:#f0abfc}
-.fbtn{background:#7c3aed;border:0;color:#fff;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
-.ws{position:relative;z-index:2;display:flex;flex:1;overflow:hidden}
-.ca{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:6px}
-canvas#b{background:#fff;border-radius:14px;touch-action:none;max-width:100%;max-height:calc(100% - 62px);box-shadow:0 8px 25px rgba(0,0,0,.6)}
-.tb{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;background:rgba(15,22,56,.9);padding:6px 8px;border-radius:12px}
-.btn{background:#232d6b;border:1px solid #6366f1;color:#fff;padding:5px 8px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer}
-.btn.act{background:#ec4899;border-color:#fbcfe8}
-.sg{display:flex;align-items:center;gap:3px;font-size:10px;background:#0a0e26;padding:3px 6px;border-radius:8px}
-input.rng{width:48px;accent-color:#f472b6}
-.sb{width:270px;background:rgba(12,18,48,.88);border-left:1px solid #f472b6;display:flex;flex-direction:column;padding:10px;gap:8px}
-.prof{display:flex;align-items:center;gap:8px;background:#192259;padding:6px;border-radius:12px}
-.av{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #ec4899;background:#312e81;flex-shrink:0}
-.pi{width:100%;padding:6px 8px;border-radius:8px;border:1px solid #7c3aed;background:#090d24;color:#fff;font-size:12px}
-.ul{background:#9333ea;color:#fff;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
-.chat{flex:1;background:#090d24;border:1px solid #312e81;border-radius:10px;padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;font-size:12px}
-.msg{display:flex;gap:6px;align-items:flex-start;background:#161e4d;padding:5px 7px;border-radius:8px}
-.msg img{width:22px;height:22px;border-radius:50%;object-fit:cover}
-.cinp{display:flex;gap:4px}
-.cinp input{flex:1;padding:6px 8px;border-radius:8px;border:1px solid #6366f1;background:#090d24;color:#fff;font-size:12px}
-.cinp button{background:#ec4899;border:0;color:#fff;padding:0 10px;border-radius:8px;font-weight:700;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99;align-items:center;justify-content:center}
-.mcard{background:#151d4a;border:1px solid #ec4899;border-radius:16px;padding:16px;width:290px;display:flex;flex-direction:column;gap:8px}
-@media(max-width:760px){.ws{flex-direction:column}canvas#b{max-height:38vh}.sb{width:100%;height:38vh;border-left:0;border-top:1px solid #f472b6}}
+body{background:radial-gradient(circle at 50% 25%,#171f54,#070a1f 75%);color:#fff;font-family:sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#sb{position:fixed;inset:0;z-index:0;pointer-events:none}
+#ls{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:20px}
+.lh{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px}
+.ny{display:flex;align-items:center;animation:fl 2.5s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.rb{width:32px;height:20px;background:linear-gradient(180deg,#f00 16%,#f90 16% 33%,#ff0 33% 50%,#3f0 50% 66%,#09f 66% 83%,#63f 83%);border-radius:4px 0 0 4px}
+.pt{width:32px;height:26px;background:#f7c;border:3px solid #fc9;border-radius:6px;display:flex;align-items:center;justify-content:flex-end}
+.ch{width:18px;height:16px;background:#9ca3af;border-radius:4px;margin-right:-7px;display:flex;align-items:center;justify-content:space-around;padding:0 2px}
+.ch::before,.ch::after{content:'';width:3px;height:3px;background:#111;border-radius:50%}
+.lt{font-size:36px;font-weight:800;color:#f0abfc;text-shadow:0 0 20px rgba(216,180,254,.4)}
+.lm{position:relative;flex:1;display:flex;align-items:center;justify-content:center}
+.cb{display:flex;flex-direction:column;gap:16px;width:240px}
+.mb{padding:16px;border-radius:16px;border:2px solid #f472b6;background:linear-gradient(135deg,#6d28d9,#9333ea);color:#fff;font-size:19px;font-weight:800;cursor:pointer}
+.mb.cr{background:linear-gradient(135deg,#1e293b,#312e81);border-color:#6366f1}
+.fp{position:absolute;right:0;top:50%;transform:translateY(-50%);width:210px;background:rgba(15,22,54,.88);border:1px solid #a855f7;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.fh{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800;color:#e9d5ff;border-bottom:1px solid #4c1d95;padding-bottom:6px}
+.af{background:#7c3aed;border:0;color:#fff;width:24px;height:24px;border-radius:8px;font-weight:800;cursor:pointer}
+.fr{display:flex;align-items:center;justify-content:space-between;background:rgba(30,41,89,.75);padding:6px 10px;border-radius:10px;font-size:13px}
+.db{width:30px;height:30px;border-radius:50%;border:1px solid #f472b6;background:rgba(236,72,153,.2);color:#fbcfe8;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.lf{text-align:center}
+.sp{background:rgba(255,255,255,.08);border:1px solid #a855f7;color:#cbd5e1;padding:9px 22px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer}
+.md{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:50;align-items:center;justify-content:center;padding:14px}
+.bx{background:#131942;border:1px solid #a855f7;border-radius:18px;padding:16px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:9px}
+.mt{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#f0abfc}
+.rl{background:rgba(239,68,68,.15);border:1px solid #f87171;color:#fecaca;font-size:11px;padding:7px;border-radius:9px}
+.dm{height:170px;background:#090d24;border-radius:10px;padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.bb{background:#1e2761;padding:7px 9px;border-radius:10px;max-width:85%}
+.bb img{width:68px;height:68px;border-radius:8px;background:#fff;display:block;margin-top:4px}
+.dc{display:flex;gap:5px}
+.dc input{flex:1;padding:7px;border-radius:9px;border:1px solid #6366f1;background:#090d24;color:#fff}
+.bt{background:#7c3aed;border:0;color:#fff;padding:7px 11px;border-radius:9px;font-weight:700;cursor:pointer}
+#sm{display:none;flex-direction:column;align-items:center;gap:6px;background:#0b102b;padding:8px;border-radius:10px;border:1px dashed #ec4899}
+#sc{background:#fff;border-radius:8px;touch-action:none}
+#gs{display:none;position:relative;z-index:3;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:10px;gap:8px}
+.tb{width:100%;max-width:700px;display:flex;justify-content:space-between;align-items:center}
+canvas#bd{background:#fff;border-radius:14px;max-width:100%;max-height:65vh;touch-action:none}
+.tl{display:flex;gap:8px;background:rgba(15,22,54,.9);padding:8px 12px;border-radius:12px}
+@media(max-width:720px){.lm{flex-direction:column;gap:18px}.fp{position:static;transform:none;width:100%;max-width:290px}}
 </style>
 </head>
 <body>
-<div class="space"><img class="nyan-gif" src="https://giphy.com" alt="Nyan"></div>
-<header>
-  <div class="brand">🌙 DreamInk</div>
-  <button class="fbtn" onclick="openFr()">👥 Друзья (<span id="fc">0</span>)</button>
-</header>
-<div class="ws">
-  <div class="ca">
-    <canvas id="b" width="700" height="460"></canvas>
-    <div class="tb">
-      <button class="btn act" id="bb" onclick="sMod('b')">🖌️ Кисть</button>
-      <button class="btn" id="bn" onclick="sMod('n')">✨ Неон</button>
-      <button class="btn" id="bs" onclick="sMod('s')">💨 Спрей</button>
-      <button class="btn" id="be" onclick="sMod('e')">🧽 Ластик</button>
-      <input type="color" id="cp" value="#ec4899">
-      <div class="sg">Разм<input class="rng" type="range" id="sz" min="1" max="50" value="8"><span id="sv">8</span></div>
-      <div class="sg">Прозр<input class="rng" type="range" id="al" min="10" max="100" value="100"><span id="av2">100%</span></div>
-      <button class="btn" onclick="un()">↩</button>
-      <button class="btn" onclick="cl()">🗑️</button>
-      <button class="btn" onclick="dl()">💾</button>
-    </div>
+<canvas id="sb"></canvas>
+<div id="ls">
+  <div class="lh"><div class="ny"><div class="rb"></div><div class="pt"><div class="ch"></div></div></div><div class="lt">DreamInk</div></div>
+  <div class="lm">
+    <div class="cb"><button class="mb" onclick="opG()">🎨 Играть</button><button class="mb cr" onclick="alert('🐊 Крокодил скоро появится!')">🐊 Крокодил</button></div>
+    <aside class="fp"><div class="fh"><span>Друзья</span><button class="af" onclick="adF()">+</button></div><div id="fl"></div></aside>
   </div>
-  <aside class="sb">
-    <div class="prof">
-      <img id="pa" class="av">
-      <input type="text" id="pn" class="pi" placeholder="Твой ник..." onchange="sProf()">
-      <label class="ul">GIF<input type="file" id="pf" accept="image/*" hidden></label>
-    </div>
-    <div class="chat" id="cb"></div>
-    <div class="cinp">
-      <input type="text" id="mi" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')sMsg()">
-      <button onclick="sMsg()">➤</button>
-    </div>
-  </aside>
+  <div class="lf"><button class="sp" onclick="document.getElementById('spm').style.display='flex'">🛡 Поддержка и правила</button></div>
 </div>
-<div class="modal" id="fm">
-  <div class="mcard">
-    <h3 style="color:#f0abfc;font-size:15px">👥 Поиск и друзья</h3>
-    <div style="display:flex;gap:4px"><input type="text" id="fi" class="pi" placeholder="Ник друга..."><button class="fbtn" onclick="addFr()">+ Добавить</button></div>
-    <div id="fl" style="font-size:12px;color:#cbd5e1;max-height:120px;overflow-y:auto"></div>
-    <button class="fbtn" style="background:#334155" onclick="document.getElementById('fm').style.display='none'">Закрыть</button>
+<div class="md" id="cm"><div class="bx">
+  <div class="mt"><span id="cf">Чат</span><button class="bt" style="background:none" onclick="clM('cm')">✕</button></div>
+  <div class="rl">📜 <b>Правила:</b> запрещены 18+ контент, мат и оскорбления.</div>
+  <div class="dm" id="db"></div>
+  <div id="sm">
+    <div style="font-size:11px;color:#f9a8d4">Нарисуй стикер (без 18+ и мата):</div>
+    <canvas id="sc" width="130" height="130"></canvas>
+    <div style="display:flex;gap:5px"><input type="color" id="skc" value="#ec4899"><button class="bt" style="background:#334155" onclick="clS()">Очист.</button><button class="bt" style="background:#22c55e" onclick="snS()">Отправить</button></div>
   </div>
+  <div class="dc"><button class="bt" onclick="tgS()">🎨</button><input type="text" id="di" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')snD()"><button class="bt" onclick="snD()">➤</button></div>
+</div></div>
+<div class="md" id="spm"><div class="bx">
+  <div class="mt"><span>🛡 Поддержка DreamInk</span><button class="bt" style="background:none" onclick="clM('spm')">✕</button></div>
+  <p style="font-size:12px;color:#cbd5e1;line-height:1.5"><b>Правила DreamInk:</b> запрещены сексуальный/18+ контент, мат, оскорбления и спам в чате и стикерах.</p>
+  <button class="bt" onclick="clM('spm')">Понятно</button>
+</div></div>
+<div id="gs">
+  <div class="tb"><button class="bt" onclick="bkM()">← В меню</button><b>🌙 DreamInk</b><button class="bt" style="background:#22c55e" onclick="svA()">💾</button></div>
+  <canvas id="bd" width="700" height="460"></canvas>
+  <div class="tl"><input type="color" id="bc" value="#ec4899"><input type="range" id="bs" min="2" max="40" value="8"><button class="bt" onclick="clB()">🗑️</button></div>
 </div>
 <script>
-const defAv="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23312e81'/><circle cx='50' cy='50' r='26' fill='%23facc15'/><circle cx='62' cy='42' r='22' fill='%23312e81'/></svg>";
-const pn=document.getElementById('pn'),pa=document.getElementById('pa');
-pn.value=localStorage.getItem('di_n')||'Игрок';pa.src=localStorage.getItem('di_a')||defAv;
-function sProf(){localStorage.setItem('di_n',pn.value.trim()||'Игрок')}
-document.getElementById('pf').onchange=e=>{const f=e.target.files.item(0);if(!f)return;const r=new FileReader();r.onload=()=>{pa.src=r.result;localStorage.setItem('di_a',r.result)};r.readAsDataURL(f)};
-const bd=document.getElementById('b'),cx=bd.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,700,460);
-let dr=false,md='b',hs=new Array(),lx=0,ly=0;ps();
-const sz=document.getElementById('sz'),al=document.getElementById('al');
-sz.oninput=()=>document.getElementById('sv').textContent=sz.value;
-al.oninput=()=>document.getElementById('av2').textContent=al.value+'%';
-function ps(){if(hs.length>15)hs.shift();hs.push(bd.toDataURL())}
-function un(){if(hs.length<=1)return;hs.pop();const i=new Image();i.onload=()=>{cx.globalAlpha=1;cx.shadowBlur=0;cx.clearRect(0,0,700,460);cx.drawImage(i,0,0)};i.src=hs.at(-1)}
-function sMod(m){md=m;document.querySelectorAll('.tb .btn').forEach(b=>b.classList.remove('act'));document.getElementById('b'+m).classList.add('act')}
-function gc(e){const r=bd.getBoundingClientRect(),x=e.touches?e.touches.item(0).clientX:e.clientX,y=e.touches?e.touches.item(0).clientY:e.clientY;return{x:(x-r.left)*(700/r.width),y:(y-r.top)*(460/r.height)}}
-function stD(e){dr=true;const c=gc(e);lx=c.x;ly=c.y;mvD(e)}
-function mvD(e){if(!dr)return;e.preventDefault();const c=gc(e),col=document.getElementById('cp').value,s=sz.value;cx.lineCap='round';cx.lineJoin='round';cx.shadowBlur=0;cx.globalAlpha=md==='e'?1:al.value/100;if(md==='s'){cx.fillStyle=col;for(let i=0;i<18;i++)cx.fillRect(c.x+(Math.random()-.5)*s*2,c.y+(Math.random()-.5)*s*2,1.5,1.5);return}cx.lineWidth=s;if(md==='n'){cx.strokeStyle='#fff';cx.shadowColor=col;cx.shadowBlur=s*1.5}else cx.strokeStyle=md==='e'?'#fff':col;cx.beginPath();cx.moveTo(lx,ly);cx.lineTo(c.x,c.y);cx.stroke();lx=c.x;ly=c.y}
-function enD(){if(!dr)return;dr=false;cx.globalAlpha=1;cx.shadowBlur=0;ps()}
-bd.onmousedown=stD;bd.onmousemove=mvD;onmouseup=enD;bd.ontouchstart=stD;bd.ontouchmove=mvD;ontouchend=enD;
-function cl(){cx.globalAlpha=1;cx.shadowBlur=0;cx.fillStyle='#fff';cx.fillRect(0,0,700,460);ps()}
-function dl(){const a=document.createElement('a');a.download='dreamink.png';a.href=bd.toDataURL();a.click()}
-function addMsg(n,t,av){const cb=document.getElementById('cb'),d=document.createElement('div');d.className='msg';d.innerHTML=`<img src="${av}"><div><b style="color:#f0abfc;font-size:11px">${n}</b><div>${t}</div></div>`;cb.appendChild(d);cb.scrollTop=cb.scrollHeight}
-function sMsg(){const i=document.getElementById('mi');if(!i.value.trim())return;addMsg(pn.value||'Игрок',i.value.trim(),pa.src);i.value=''}
-const rawFr=localStorage.getItem('di_f');let frs=rawFr?rawFr.split('|').filter(Boolean):new Array();document.getElementById('fc').textContent=frs.length;
-function openFr(){document.getElementById('fm').style.display='flex';rFr()}
-function addFr(){const v=document.getElementById('fi').value.trim();if(!v)return;frs.push(v);localStorage.setItem('di_f',frs.join('|'));document.getElementById('fi').value='';document.getElementById('fc').textContent=frs.length;rFr();addMsg('Система',`Заявка в друзья отправлена: ${v} 💌`,defAv)}
-function rFr(){document.getElementById('fl').innerHTML=frs.length?frs.map(f=>`<div style="padding:4px 0;border-bottom:1px solid #312e81">🌙 ${f} <span style="color:#4ade80">(в списке)</span></div>`).join(''):'Пока нет друзей — введи ник выше!'}
-addMsg('DreamInk','Добро пожаловать! На Этапе 2 подключим онлайн-чат с друзьями 🌙',defAv);
-</script>
-</body>
-</html>
+const sc=document.getElementById('sb'),sx=sc.getContext('2d');let sw,sh,st=new Array();
+function rs(){sw=sc.width=innerWidth;sh=sc.height=innerHeight}addEventListener('resize',rs);rs();
+for(let i=0;i<65;i++)st.push({x:Math.random()*sw,y:Math.random()*sh,r:1.5});
+(function ds(){sx.clearRect(0,0,sw,sh);sx.fillStyle='#fff';st.forEach(s=>{sx.beginPath();sx.arc(s.x,s.y,s.r,0,6.28);sx.fill()});requestAnimationFrame(ds)})();
+let fr=new Array('Луна','КосмоКот','Тень');
+function rF(){document.getElementById('fl').innerHTML=fr.map(n=>'<div class="fr"><span>🌙 '+n+'</span><button class="db" onclick="opC(\''+n+'\')">•••</button></div>').join('')}
+rF();
+function adF(){const n=prompt('Ник друга:');if(n&&n.trim()){fr.push(n.trim());rF()}}
+const bw=new Array('бля','сука','хуй','пизд','еба','секс','порно');
+function opC(n){document.getElementById('cf').textContent='Чат: '+n;document.getElementById('db').innerHTML='<div class="bb">Привет! Нажми 🎨 чтобы нарисовать свой стикер!</div>';document.getElementById('cm').style.display='flex'}
+function snD(){const i=document.getElementById('di'),v=i.value.trim();if(!v)return;if(bw.some(w=>v.toLowerCase().includes(w))){alert('Запрещены мат и 18+ слова!');return}const b=document.getElementById('db');b.innerHTML+='<div class="bb" style="align-self:flex-end;background:#6d28d9">'+v+'</div>';i.value='';b.scrollTop=b.scrollHeight}
+const sk=document.getElementById('sc'),kx=sk.getContext('2d');let sd=false;
+function clS(){kx.fillStyle='#fff';kx.fillRect(0,0,130,130)}clS();
+function tgS(){const m=document.getElementById('sm');m.style.display=m.style.display==='flex'?'none':'flex'}
+function gp(e,c){const r=c.getBoundingClientRect(),x=e.touches?e.touches.item(0).clientX:e.clientX,y=e.touches?e.touches.item(0).clientY:e.clientY;return{x:(x-r.left)*(c.width/r.width),y:(y-r.top)*(c.height/r.height)}}
+sk.onmousedown=sk.ontouchstart=e=>{sd=true;const p=gp(e,sk);kx.beginPath();kx.moveTo(p.x,p.y)};
+sk.onmousemove=sk.ontouchmove=e=>{if(!sd)return;e.preventDefault();const p=gp(e,sk);kx.strokeStyle=document.getElementById('skc').value;kx.lineWidth=4;kx.lineCap='round';kx.lineTo(p.x,p.y);kx.stroke()};
+addEventListener('mouseup',()=>sd=false);addEventListener('touchend',()=>sd=false);
+function snS(){const b=document.getElementById('db');b.innerHTML+='<div class="bb" style="align-self:flex-end;background:#6d28d9">Стикер:<img src="'+sk.toDataURL()+'"></div>';b.scrollTop=b.scrollHeight;clS();tgS()}
+function clM(id){document.getElementById(id).style.display='none'}
+const bd=document.getElementById('bd'),cx=bd.getContext('2d');let pt=false;
+function clB(){cx.fillStyle='#fff';cx.fillRect(0,0,700,460)}clB();
+function opG(){document.getElementById('ls').style.display='none';document.getElementById('gs').style.display='flex'}
+  function bkM(){document.getElementById('gs').style.display='none';document.getElementById('ls').style.display='flex'}
+bd.onmousedown=bd.ontouchstart=e=>{pt=true;const p=gp(e,bd);cx.beginPath();cx.moveTo(p.x,p.y)};
+bd.onmousemove=bd.ontouchmove=e=>{if(!pt)return;e.preventDefault();const p=gp(e,bd);cx.strokeStyle=document.getElementById('bc').value;cx.lineWidth=document.getElementById('bs').value;cx.lineCap='round';cx.lineTo(p.x,p.y);cx.stroke()};
+addEventListener('mouseup',()=>pt=false);addEventListener('touchend',()=>pt=false);
+function svA(){const a=document.createElement('a');a.download='dreamink.png';a.href=bd.toDataURL();a.click()}
