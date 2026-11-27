@@ -248,3 +248,10 @@ function tDr() {
   a.forEach(function(u) {
     var im = document.createElement('img'); im.src = u;
     im.onclick = function() {
+var m = document.createElement('div'); m.className = 'cm'; m.textContent = '🌙 Ты:';
+var p = document.createElement('img'); p.src = u; m.appendChild(p);
+g('cf').appendChild(m); g('cf').scrollTop = g('cf').scrollHeight; d.style.display = 'none';
+};
+d.appendChild(im);
+});
+}
