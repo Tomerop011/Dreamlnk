@@ -1,6 +1,5 @@
 function g(i) { return document.getElementById(i); }
 
-/* Цветовой круг и палитра */
 var hue = 330, col = '#ec4899', cw = g('cw'), cx = cw.getContext('2d');
 for (var a = 0; a < 360; a++) {
   cx.beginPath(); cx.moveTo(60, 60);
@@ -31,43 +30,72 @@ new Array('#ef4444','#f97316','#facc15','#22c55e','#06b6d4','#3b82f6','#8b5cf6',
   d.onclick = function() { sCol(c); }; g('sws').appendChild(d);
 });
 
-/* Ползунки */
 g('sz').oninput = function() { g('szv').textContent = this.value; };
 g('al').oninput = function() { g('alv').textContent = this.value + '%'; };
 g('ag').oninput = function() { g('agv').textContent = this.value + '°'; };
 g('sb').oninput = function() { g('sbv').textContent = this.value + '%'; };
 
-/* Выпадающий список «Холст» */
 function togHList() { var h = g('hdrop'); h.style.display = h.style.display == 'flex' ? 'none' : 'flex'; }
 function togEye() {
   var hidden = l1.style.opacity == '0';
   l1.style.opacity = hidden ? '1' : '0';
   g('eye1').style.opacity = hidden ? '1' : '0.35';
 }
-
-/* Стрелка сворачивания чата */
 function togChat() {
   var rp = g('rpanel'), ar = g('carrow');
   rp.classList.toggle('collapsed');
   ar.textContent = rp.classList.contains('collapsed') ? '◀' : '▶';
 }
+setTimeout(function() { g('vp').scrollTop = 35; g('vp').scrollLeft = 35; }, 100);
 
-/* Центрируем холст, чтобы серые ползунки прокрутки сверху/справа и снизу были сразу подвижными */
-setTimeout(function() {
-  var vp = g('vp');
-  vp.scrollTop = 35;
-  vp.scrollLeft = 35;
-}, 100);
+var ava = g('pava'), dragAva = false, ax = 0, ay = 0;
+ava.onmousedown = ava.ontouchstart = function(e) {
+  e.stopPropagation(); dragAva = true;
+  var cx = e.touches ? e.touches.item(0).clientX : e.clientX;
+  var cy = e.touches ? e.touches.item(0).clientY : e.clientY;
+  ax = cx - ava.offsetLeft; ay = cy - ava.offsetTop;
+};
+addEventListener('mousemove', function(e) {
+  if (!dragAva) return;
+  ava.style.left = Math.max(0, Math.min(575, e.clientX - ax)) + 'px';
+  ava.style.top = Math.max(0, Math.min(375, e.clientY - ay)) + 'px';
+});
+addEventListener('touchmove', function(e) {
+  if (!dragAva) return;
+  ava.style.left = Math.max(0, Math.min(575, e.touches.item(0).clientX - ax)) + 'px';
+  ava.style.top = Math.max(0, Math.min(375, e.touches.item(0).clientY - ay)) + 'px';
+}, { passive: false });
 
-/* Штамп для мягкой кисти */
+function showEmo(em) {
+  var p = g('pemo'); p.textContent = em; p.style.opacity = '1'; p.style.top = '-32px';
+  setTimeout(function() { p.style.opacity = '0'; p.style.top = '-26px'; }, 1200);
+}
+
+var yesVotes = 0;
+function startKick() {
+  var nick = prompt('Ник игрока для голосования за кик:');
+  if (!nick || !nick.trim()) return;
+  yesVotes = 1; g('vky').textContent = yesVotes;
+  g('vkinfo').textContent = 'Исключить игрока «' + nick.trim() + '»?';
+  g('vkbox').style.display = 'flex';
+}
+function voteKick(agree) {
+  if (agree) {
+    yesVotes++; g('vky').textContent = yesVotes;
+    if (yesVotes >= 2) { alert('Большинство согласилось — игрок исключён из комнаты!'); g('vkbox').style.display = 'none'; }
+  } else {
+    alert('Голосование отклонено.'); g('vkbox').style.display = 'none';
+  }
+}
+
 var stamp = document.createElement('canvas'), stx = stamp.getContext('2d');
-function makeSoftStamp(size, color, alpha) {
-  var s = Math.max(4, Math.round(size));
+function makeSoftStamp(size, color) {
+  var s = Math.max(6, Math.round(size));
   stamp.width = s; stamp.height = s;
   var r = s / 2, grad = stx.createRadialGradient(r, r, 0, r, r, r);
   stx.clearRect(0, 0, s, s);
-  grad.addColorStop(0, 'rgba(255,255,255,' + (alpha / 5) + ')');
-  grad.addColorStop(0.55, 'rgba(255,255,255,' + (alpha / 11) + ')');
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.5, 'rgba(255,255,255,0.45)');
   grad.addColorStop(1, 'rgba(255,255,255,0)');
   stx.globalCompositeOperation = 'source-over';
   stx.fillStyle = grad; stx.fillRect(0, 0, s, s);
@@ -75,9 +103,11 @@ function makeSoftStamp(size, color, alpha) {
   stx.fillStyle = color; stx.fillRect(0, 0, s, s);
 }
 
-/* Инструменты и рисование */
-var l1 = g('l1'), x1 = l1.getContext('2d'), tl = 'brush', dr = false, sx = 0, sy = 0;
-function clMy() { x1.clearRect(0, 0, 620, 420); }
+var l1 = g('l1'), x1 = l1.getContext('2d');
+var ltmp = g('ltmp'), xtmp = ltmp.getContext('2d');
+var tl = 'brush', dr = false, sx = 0, sy = 0;
+
+function clMy() { x1.clearRect(0, 0, 620, 420); xtmp.clearRect(0, 0, 620, 420); }
 function st(t) {
   tl = t;
   document.querySelectorAll('.tg .tb').forEach(function(b) { b.classList.remove('act'); });
@@ -102,7 +132,10 @@ l1.onmousedown = l1.ontouchstart = function(e) {
     st('brush'); return;
   }
   dr = true; sx = p.x; sy = p.y;
-  if (tl == 'soft') makeSoftStamp(g('sz').value, col, g('al').value / 100);
+  if (tl == 'soft') {
+    ltmp.style.opacity = g('al').value / 100;
+    makeSoftStamp(g('sz').value, col);
+  }
 };
 
 l1.onmousemove = l1.ontouchmove = function(e) {
@@ -112,7 +145,7 @@ l1.onmousemove = l1.ontouchmove = function(e) {
   var ny = sy + (p.y - sy) - (p.y - sy) / 1.3 * sb;
   var sz = Number(g('sz').value), al = g('al').value / 100;
   var dist = Math.hypot(nx - sx, ny - sy);
-  var steps = Math.max(1, Math.ceil(dist / 1.5));
+  var steps = Math.max(1, Math.ceil(dist / 1.2));
 
   if (tl == 'erase') {
     x1.globalCompositeOperation = 'destination-out'; x1.globalAlpha = 1;
@@ -123,14 +156,14 @@ l1.onmousemove = l1.ontouchmove = function(e) {
     x1.strokeStyle = col; x1.lineCap = 'round'; x1.lineJoin = 'round'; x1.lineWidth = sz;
     x1.beginPath(); x1.moveTo(sx, sy); x1.lineTo(nx, ny); x1.stroke();
   } else if (tl == 'soft') {
-    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = 1;
+    xtmp.globalCompositeOperation = 'source-over'; xtmp.globalAlpha = 1;
     var half = stamp.width / 2;
     for (var s = 0; s <= steps; s++) {
       var t = s / steps;
-      x1.drawImage(stamp, sx + (nx - sx) * t - half, sy + (ny - sy) * t - half);
+      xtmp.drawImage(stamp, sx + (nx - sx) * t - half, sy + (ny - sy) * t - half);
     }
   } else if (tl == 'mark') {
-    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = al / 4.5;
+    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = al;
     x1.fillStyle = col;
     var rad = g('ag').value / 57.295;
     var w = sz, h = Math.max(3, sz / 3.8);
@@ -153,10 +186,19 @@ l1.onmousemove = l1.ontouchmove = function(e) {
   sx = nx; sy = ny;
 };
 
-addEventListener('mouseup', function() { dr = false; x1.globalAlpha = 1; });
-addEventListener('touchend', function() { dr = false; x1.globalAlpha = 1; });
+function finishStroke() {
+  dragAva = false;
+  if (dr && tl == 'soft') {
+    x1.globalCompositeOperation = 'source-over';
+    x1.globalAlpha = g('al').value / 100;
+    x1.drawImage(ltmp, 0, 0);
+    xtmp.clearRect(0, 0, 620, 420);
+  }
+  dr = false; x1.globalAlpha = 1;
+}
+addEventListener('mouseup', finishStroke);
+addEventListener('touchend', finishStroke);
 
-/* Масштаб (+ / -) */
 var z = 1;
 function zm(d) {
   z = Math.max(0.6, Math.min(2.2, z + d));
@@ -165,7 +207,6 @@ function zm(d) {
   g('zv').textContent = Math.round(z / 0.01) + '%';
 }
 
-/* Чат и смайлы */
 var bw = new Array('бля','сука','хуй','пизд','еба','секс','порно');
 function sCh() {
   var i = g('cin'), v = i.value.trim(); if (!v) return;
