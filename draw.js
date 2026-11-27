@@ -3,11 +3,11 @@ function g(i) { return document.getElementById(i); }
 /* Цветовой круг и палитра */
 var hue = 330, col = '#ec4899', cw = g('cw'), cx = cw.getContext('2d');
 for (var a = 0; a < 360; a++) {
-  cx.beginPath(); cx.moveTo(65, 65);
-  cx.arc(65, 65, 64, (a - 1) / 57.295, (a + 1) / 57.295);
+  cx.beginPath(); cx.moveTo(60, 60);
+  cx.arc(60, 60, 59, (a - 1) / 57.295, (a + 1) / 57.295);
   cx.closePath(); cx.fillStyle = 'hsl(' + a + ',100%,50%)'; cx.fill();
 }
-cx.beginPath(); cx.arc(65, 65, 45, 0, 6.28); cx.fillStyle = '#10163b'; cx.fill();
+cx.beginPath(); cx.arc(60, 60, 41, 0, 6.28); cx.fillStyle = '#10163b'; cx.fill();
 
 function uSv() {
   g('sv').style.background = 'linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,hsl(' + hue + ',100%,50%))';
@@ -16,7 +16,7 @@ uSv();
 
 function sCol(c) { col = c; g('sv').style.borderColor = c; }
 cw.onclick = function(e) {
-  var r = cw.getBoundingClientRect(), ang = Math.atan2(e.clientY - r.top - 65, e.clientX - r.left - 65) / 0.01745;
+  var r = cw.getBoundingClientRect(), ang = Math.atan2(e.clientY - r.top - 60, e.clientX - r.left - 60) / 0.01745;
   if (ang < 0) ang += 360; hue = Math.round(ang); uSv(); sCol('hsl(' + hue + ',100%,50%)');
 };
 g('sv').onclick = function(e) {
@@ -31,20 +31,48 @@ new Array('#ef4444','#f97316','#facc15','#22c55e','#06b6d4','#3b82f6','#8b5cf6',
   d.onclick = function() { sCol(c); }; g('sws').appendChild(d);
 });
 
-/* Ползунки с обновлением цифр */
+/* Ползунки */
 g('sz').oninput = function() { g('szv').textContent = this.value; };
 g('al').oninput = function() { g('alv').textContent = this.value + '%'; };
+g('ag').oninput = function() { g('agv').textContent = this.value + '°'; };
 g('sb').oninput = function() { g('sbv').textContent = this.value + '%'; };
 
-/* Выпадающий список «Холст» со скрытием через глаз */
-function togHList() {
-  var h = g('hdrop');
-  h.style.display = h.style.display == 'flex' ? 'none' : 'flex';
-}
+/* Выпадающий список «Холст» */
+function togHList() { var h = g('hdrop'); h.style.display = h.style.display == 'flex' ? 'none' : 'flex'; }
 function togEye() {
   var hidden = l1.style.opacity == '0';
   l1.style.opacity = hidden ? '1' : '0';
   g('eye1').style.opacity = hidden ? '1' : '0.35';
+}
+
+/* Стрелка сворачивания чата */
+function togChat() {
+  var rp = g('rpanel'), ar = g('carrow');
+  rp.classList.toggle('collapsed');
+  ar.textContent = rp.classList.contains('collapsed') ? '◀' : '▶';
+}
+
+/* Центрируем холст, чтобы серые ползунки прокрутки сверху/справа и снизу были сразу подвижными */
+setTimeout(function() {
+  var vp = g('vp');
+  vp.scrollTop = 35;
+  vp.scrollLeft = 35;
+}, 100);
+
+/* Штамп для мягкой кисти */
+var stamp = document.createElement('canvas'), stx = stamp.getContext('2d');
+function makeSoftStamp(size, color, alpha) {
+  var s = Math.max(4, Math.round(size));
+  stamp.width = s; stamp.height = s;
+  var r = s / 2, grad = stx.createRadialGradient(r, r, 0, r, r, r);
+  stx.clearRect(0, 0, s, s);
+  grad.addColorStop(0, 'rgba(255,255,255,' + (alpha / 5) + ')');
+  grad.addColorStop(0.55, 'rgba(255,255,255,' + (alpha / 11) + ')');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  stx.globalCompositeOperation = 'source-over';
+  stx.fillStyle = grad; stx.fillRect(0, 0, s, s);
+  stx.globalCompositeOperation = 'source-in';
+  stx.fillStyle = color; stx.fillRect(0, 0, s, s);
 }
 
 /* Инструменты и рисование */
@@ -74,6 +102,7 @@ l1.onmousedown = l1.ontouchstart = function(e) {
     st('brush'); return;
   }
   dr = true; sx = p.x; sy = p.y;
+  if (tl == 'soft') makeSoftStamp(g('sz').value, col, g('al').value / 100);
 };
 
 l1.onmousemove = l1.ontouchmove = function(e) {
@@ -81,29 +110,51 @@ l1.onmousemove = l1.ontouchmove = function(e) {
   var p = gp(e), sb = g('sb').value / 100;
   var nx = sx + (p.x - sx) - (p.x - sx) / 1.3 * sb;
   var ny = sy + (p.y - sy) - (p.y - sy) / 1.3 * sb;
-  var sz = g('sz').value, al = g('al').value / 100;
-  x1.lineCap = 'round'; x1.lineJoin = 'round'; x1.shadowBlur = 0;
+  var sz = Number(g('sz').value), al = g('al').value / 100;
+  var dist = Math.hypot(nx - sx, ny - sy);
+  var steps = Math.max(1, Math.ceil(dist / 1.5));
 
   if (tl == 'erase') {
-    x1.globalCompositeOperation = 'destination-out'; x1.globalAlpha = 1; x1.lineWidth = sz;
-  } else {
-    x1.globalCompositeOperation = 'source-over'; x1.strokeStyle = col; x1.fillStyle = col;
-    if (tl == 'spray') {
-      x1.globalAlpha = al / 1.6;
-      for (var i = 0; i < 20; i++) x1.fillRect(nx + (Math.random() - 0.5) / 0.5 * sz, ny + (Math.random() - 0.5) / 0.5 * sz, 1.5, 1.5);
-      sx = nx; sy = ny; return;
+    x1.globalCompositeOperation = 'destination-out'; x1.globalAlpha = 1;
+    x1.lineCap = 'round'; x1.lineJoin = 'round'; x1.lineWidth = sz;
+    x1.beginPath(); x1.moveTo(sx, sy); x1.lineTo(nx, ny); x1.stroke();
+  } else if (tl == 'brush') {
+    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = al;
+    x1.strokeStyle = col; x1.lineCap = 'round'; x1.lineJoin = 'round'; x1.lineWidth = sz;
+    x1.beginPath(); x1.moveTo(sx, sy); x1.lineTo(nx, ny); x1.stroke();
+  } else if (tl == 'soft') {
+    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = 1;
+    var half = stamp.width / 2;
+    for (var s = 0; s <= steps; s++) {
+      var t = s / steps;
+      x1.drawImage(stamp, sx + (nx - sx) * t - half, sy + (ny - sy) * t - half);
     }
-    if (tl == 'soft') { x1.shadowColor = col; x1.shadowBlur = sz / 1.1; x1.globalAlpha = al / 2.2; }
-    else if (tl == 'mark') { x1.lineCap = 'square'; x1.globalAlpha = al / 1.8; }
-    else { x1.globalAlpha = al; }
-    x1.lineWidth = sz;
+  } else if (tl == 'mark') {
+    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = al / 4.5;
+    x1.fillStyle = col;
+    var rad = g('ag').value / 57.295;
+    var w = sz, h = Math.max(3, sz / 3.8);
+    for (var s = 0; s <= steps; s++) {
+      var t = s / steps, px = sx + (nx - sx) * t, py = sy + (ny - sy) * t;
+      x1.save(); x1.translate(px, py); x1.rotate(rad);
+      x1.fillRect(-w / 2, -h / 2, w, h);
+      x1.restore();
+    }
+  } else if (tl == 'spray') {
+    x1.globalCompositeOperation = 'source-over'; x1.globalAlpha = al / 3.2;
+    x1.fillStyle = col;
+    for (var i = 0; i < 18; i++) {
+      var a2 = Math.random() * 6.28, rad2 = Math.pow(Math.random(), 0.65) * sz;
+      x1.beginPath();
+      x1.arc(nx + Math.cos(a2) * rad2, ny + Math.sin(a2) * rad2, Math.max(1, sz / 14), 0, 6.28);
+      x1.fill();
+    }
   }
-  x1.beginPath(); x1.moveTo(sx, sy); x1.lineTo(nx, ny); x1.stroke();
   sx = nx; sy = ny;
 };
 
-addEventListener('mouseup', function() { dr = false; x1.globalAlpha = 1; x1.shadowBlur = 0; });
-addEventListener('touchend', function() { dr = false; x1.globalAlpha = 1; x1.shadowBlur = 0; });
+addEventListener('mouseup', function() { dr = false; x1.globalAlpha = 1; });
+addEventListener('touchend', function() { dr = false; x1.globalAlpha = 1; });
 
 /* Масштаб (+ / -) */
 var z = 1;
