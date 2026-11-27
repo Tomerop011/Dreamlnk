@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>DreamInk — Студия рисования (Beta)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #070a1f;
+      color: #ffffff;
+      font-family: sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* === 1. ЛЕВАЯ ПАНЕЛЬ === */
+    .left-panel {
+      width: 225px;
+      background: #10163b;
+      border-right: 1px solid #4c1d95;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow-y: auto;
+    }
+    .mini-logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #192152;
+      padding: 5px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 13px;
+      color: #f0abfc;
+    }
+    .back-btn {
+      background: #6d28d9;
+      border: none;
+      color: #fff;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .players-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .player-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a2359;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      border: 1px solid #312e81;
+    }
+    .wheel-wrap {
+      position: relative;
+      width: 146px;
+      height: 146px;
+      margin: 2px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas#cwheel { border-radius: 50%; cursor: crosshair; touch-action: none; }
+    .sv-box {
+      position: absolute;
+      width: 78px;
+      height: 78px;
+      border: 2px solid #fff;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+    .sw {
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.4);
+      cursor: pointer;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+    .tbtn {
+      background: #1e2761;
+      border: 1px solid #4f46e5;
+      color: #fff;
+      padding: 6px 2px;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .tbtn.act { background: #ec4899; border-color: #fbcfe8; }
+    .sliders {
+      background: #0b102b;
+      padding: 6px 8px;
+      border-radius: 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 10px;
+    }
+    .sl-row { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+    .sl-row input { width: 85px; accent-color: #ec4899; }
+    .future-box {
+      margin-top: auto;
+      border: 1px dashed #6366f1;
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    /* === 2. ЦЕНТР (Холст + Серые полосы прокрутки + Зум) === */
+    .center-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px;
+      gap: 6px;
+      overflow: hidden;
+    }
+    .layers-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: rgba(16, 22, 59, 0.9);
+      padding: 5px 8px;
+      border-radius: 10px;
+      border: 1px solid #6366f1;
+    }
+    .layer-tab {
+      background: #1e2761;
+      border: 1px solid #4f46e5;
+      color: #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .layer-tab.act { background: #7c3aed; color: #fff; border-color: #f0abfc; }
+
+    /* Окно просмотра с серыми ползунками прокрутки снизу и справа */
+    .board-viewport {
+      width: 100%;
+      flex: 1;
+      background: #1e243b;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      overflow: scroll;
+      display: flex;
+      padding: 12px;
+    }
+    .board-viewport::-webkit-scrollbar { width: 12px; height: 12px; }
+    .board-viewport::-webkit-scrollbar-track { background: #334155; border-radius: 6px; }
+    .board-viewport::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 6px; border: 2px solid #334155; }
+    .board-viewport::-webkit-scrollbar-corner { background: #334155; }
+
+    .board-stage {
+      position: relative;
+      width: 640px;
+      height: 440px;
+      flex-shrink: 0;
+      margin: auto;
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.65);
+    }
+    .board-stage canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .zoom-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #10163b;
+      padding: 4px 12px;
+      border-radius: 10px;
+      border: 1px solid #4c1d95;
+      font-size: 12px;
+    }
+    .zbtn {
+      background: #312e81;
+      border: none;
+      color: #fff;
+      width: 26px;
+      height: 24px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* === 3. ПРАВАЯ ПАНЕЛЬ (ЧАТ) === */
+    .right-panel {
+      width: 220px;
+      background: #10163b;
+      border-left: 1px solid #4c1d95;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .chat-head {
+      font-weight: 800;
+      font-size: 13px;
+      color: #f0abfc;
+      border-bottom: 1px solid #312e81;
+      padding-bottom: 4px;
+    }
+    .chat-feed {
+      flex: 1;
+      background: #080b21;
+      border-radius: 9px;
+      padding: 6px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 11px;
+    }
+    .cmsg { background: #1e2761; padding: 5px 7px; border-radius: 8px; word-break: break-word; }
+    .cmsg img { width: 54px; height: 54px; background: #fff; border-radius: 6px; display: block; margin-top: 3px; }
+    .st-drawer {
+      display: none;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-height: 65px;
+      overflow-y: auto;
+      background: #0b102b;
+      padding: 4px;
+      border-radius: 7px;
+    }
+    .st-drawer img { width: 36px; height: 36px; background: #fff; border-radius: 5px; cursor: pointer; }
+    .chat-inp { display: flex; gap: 4px; }
+    .chat-inp input {
+      flex: 1;
+      min-width: 0;
+      padding: 6px;
+      border-radius: 7px;
+      border: 1px solid #4f46e5;
+      background: #080b21;
+      color: #fff;
+      font-size: 11px;
+    }
+    @media (max-width: 780px) {
+      body { flex-direction: column; overflow-y: auto; height: auto; }
+      .left-panel, .right-panel { width: 100%; border: none; }
+      .board-viewport { height: 340px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ЛЕВАЯ ПАНЕЛЬ -->
+  <aside class="left-panel">
+    <div class="mini-logo">
+      <span>🐱 DreamInk</span>
+      <button class="back-btn" onclick="location.href='index.html'">← Меню</button>
+    </div>
+
+    <div class="players-box" id="players-box">
+      <div class="player-tag">🌙 <b>Ты (Холст 1)</b></div>
+    </div>
+
+    <div class="wheel-wrap">
+      <canvas id="cwheel" width="146" height="146"></canvas>
+      <div class="sv-box" id="svbox"></div>
+    </div>
+
+    <div class="swatches" id="swatches"></div>
+
+    <div class="tools-grid">
+      <button class="tbtn act" id="tb-brush" onclick="setTool('brush')">🖌️ Кисть</button>
+      <button class="tbtn" id="tb-soft" onclick="setTool('soft')">☁️ Мягк.</button>
+      <button class="tbtn" id="tb-mark" onclick="setTool('mark')">🖍️ Маркер</button>
+      <button class="tbtn" id="tb-spray" onclick="setTool('spray')">💨 Спрей</button>
+      <button class="tbtn" id="tb-erase" onclick="setTool('erase')">🧽 Ластик</button>
+      <button class="tbtn" id="tb-pick" onclick="setTool('pick')">💉 Пипетка</button>
+      <button class="tbtn" id="tb-fill" onclick="setTool('fill')">🪣 Залив.</button>
+      <button class="tbtn" style="background:#991b1b;border-color:#f87171" onclick="clearMyLayer()">🗑️ Свой</button>
+    </div>
+
+    <div class="sliders">
+      <div class="sl-row"><span>Размер:</span><input type="range" id="sz" min="1" max="50" value="8"><b id="szv">8</b></div>
+      <div class="sl-row"><span>Прозр.:</span><input type="range" id="al" min="10" max="100" value="100"><b id="alv">100%</b></div>
+      <div class="sl-row"><span>Стабил.:</span><input type="range" id="st" min="0" max="90" value="40"><b id="stv">40%</b></div>
+    </div>
+
+    <div class="future-box">✨ Текстуры кистей — скоро</div>
+  </aside>
+
+  <!-- ЦЕНТРАЛЬНАЯ ЗОНА -->
+  <main class="center-panel">
+    <div class="layers-bar" id="layers-bar">
+      <button class="layer-tab act" id="tab-1" onclick="selectLayer(1)">🟪 Холст 1 (твой)</button>
+      <button class="tbtn" style="background:#065f46;border-color:#34d399;padding:4px 8px" id="sim-btn" onclick="simulateFriendJoin()">+ Тест: зашёл друг</button>
+      <button class="tbtn" style="padding:4px 8px;margin-left:auto" onclick="saveAll()">💾</button>
+    </div>
+
+    <div class="board-viewport" id="viewport">
+      <div class="board-stage" id="stage">
+        <canvas id="layer-1" width="640" height="440"></canvas>
+      </div>
+    </div>
+
+    <div class="zoom-bar">
+      <button class="zbtn" onclick="changeZoom(-0.2)">-</button>
+      <span id="zval">100%</span>
+      <button class="zbtn" onclick="changeZoom(0.2)">+</button>
+    </div>
+  </main>
+
+  <!-- ПРАВАЯ ПАНЕЛЬ (ЧАТ) -->
+  <aside class="right-panel">
+    <div class="chat-head">💬 Чат комнаты:</div>
+    <div class="chat-feed" id="cfeed"></div>
+    <div class="st-drawer" id="sdrawer"></div>
+    <div class="chat-inp">
+      <button class="tbtn" onclick="toggleDrawer()">🎨</button>
