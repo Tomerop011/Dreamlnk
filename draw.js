@@ -48,23 +48,44 @@ function togChat() {
 }
 setTimeout(function() { g('vp').scrollTop = 35; g('vp').scrollLeft = 35; }, 100);
 
-var ava = g('pava'), dragAva = false, ax = 0, ay = 0;
-ava.onmousedown = ava.ontouchstart = function(e) {
-  e.stopPropagation(); dragAva = true;
-  var cx = e.touches ? e.touches.item(0).clientX : e.clientX;
-  var cy = e.touches ? e.touches.item(0).clientY : e.clientY;
-  ax = cx - ava.offsetLeft; ay = cy - ava.offsetTop;
+/* Аватарка: перетаскивание + тап чтобы спрятать в угол или вернуть на доску */
+var ava = g('pava'), dragAva = false, avaMoved = false, ax = 0, ay = 0, avaDocked = false, savedX = 120, savedY = 120;
+ava.onpointerdown = function(e) {
+  e.stopPropagation();
+  ava.setPointerCapture(e.pointerId);
+  dragAva = true; avaMoved = false;
+  ax = e.clientX - ava.offsetLeft;
+  ay = e.clientY - ava.offsetTop;
 };
-addEventListener('mousemove', function(e) {
+ava.onpointermove = function(e) {
   if (!dragAva) return;
-  ava.style.left = Math.max(0, Math.min(575, e.clientX - ax)) + 'px';
-  ava.style.top = Math.max(0, Math.min(375, e.clientY - ay)) + 'px';
-});
-addEventListener('touchmove', function(e) {
+  var nx = Math.max(0, Math.min(575, e.clientX - ax));
+  var ny = Math.max(0, Math.min(375, e.clientY - ay));
+  if (Math.hypot(nx - ava.offsetLeft, ny - ava.offsetTop) > 4) {
+    avaMoved = true;
+    avaDocked = false;
+    ava.style.opacity = '1';
+    ava.style.transform = 'scale(1)';
+  }
+  ava.style.left = nx + 'px';
+  ava.style.top = ny + 'px';
+};
+ava.onpointerup = function(e) {
   if (!dragAva) return;
-  ava.style.left = Math.max(0, Math.min(575, e.touches.item(0).clientX - ax)) + 'px';
-  ava.style.top = Math.max(0, Math.min(375, e.touches.item(0).clientY - ay)) + 'px';
-}, { passive: false });
+  dragAva = false;
+  if (!avaMoved) {
+    if (!avaDocked) {
+      savedX = ava.offsetLeft; savedY = ava.offsetTop;
+      ava.style.left = '6px'; ava.style.top = '6px';
+      ava.style.opacity = '0.55'; ava.style.transform = 'scale(0.75)';
+      avaDocked = true;
+    } else {
+      ava.style.left = savedX + 'px'; ava.style.top = savedY + 'px';
+      ava.style.opacity = '1'; ava.style.transform = 'scale(1)';
+      avaDocked = false;
+    }
+  }
+};
 
 function showEmo(em) {
   var p = g('pemo'); p.textContent = em; p.style.opacity = '1'; p.style.top = '-32px';
@@ -103,9 +124,10 @@ function makeSoftStamp(size, color) {
   stx.fillStyle = color; stx.fillRect(0, 0, s, s);
 }
 
+/* Рисование через Pointer Events (защита от случайных палок стилусом и ладонью) */
 var l1 = g('l1'), x1 = l1.getContext('2d');
 var ltmp = g('ltmp'), xtmp = ltmp.getContext('2d');
-var tl = 'brush', dr = false, sx = 0, sy = 0;
+var tl = 'brush', dr = false, activePtr = null, sx = 0, sy = 0;
 
 function clMy() { x1.clearRect(0, 0, 620, 420); xtmp.clearRect(0, 0, 620, 420); }
 function st(t) {
@@ -115,12 +137,12 @@ function st(t) {
 }
 function gp(e) {
   var r = l1.getBoundingClientRect();
-  var x = e.touches ? e.touches.item(0).clientX : e.clientX;
-  var y = e.touches ? e.touches.item(0).clientY : e.clientY;
-  return { x: (x - r.left) / (r.width / 620), y: (y - r.top) / (r.height / 420) };
+  return { x: (e.clientX - r.left) / (r.width / 620), y: (e.clientY - r.top) / (r.height / 420) };
 }
 
-l1.onmousedown = l1.ontouchstart = function(e) {
+l1.onpointerdown = function(e) {
+  if (dr) return;
+  if (e.pointerType == 'touch' && !e.isPrimary) return;
   var p = gp(e);
   if (tl == 'fill') {
     x1.globalAlpha = g('al').value / 100; x1.globalCompositeOperation = 'source-over';
@@ -131,6 +153,8 @@ l1.onmousedown = l1.ontouchstart = function(e) {
     if (d.at(3) > 0) sCol('rgb(' + d.at(0) + ',' + d.at(1) + ',' + d.at(2) + ')');
     st('brush'); return;
   }
+  l1.setPointerCapture(e.pointerId);
+  activePtr = e.pointerId;
   dr = true; sx = p.x; sy = p.y;
   if (tl == 'soft') {
     ltmp.style.opacity = g('al').value / 100;
@@ -138,8 +162,9 @@ l1.onmousedown = l1.ontouchstart = function(e) {
   }
 };
 
-l1.onmousemove = l1.ontouchmove = function(e) {
-  if (!dr) return; e.preventDefault();
+l1.onpointermove = function(e) {
+  if (!dr || e.pointerId != activePtr) return;
+  e.preventDefault();
   var p = gp(e), sb = g('sb').value / 100;
   var nx = sx + (p.x - sx) - (p.x - sx) / 1.3 * sb;
   var ny = sy + (p.y - sy) - (p.y - sy) / 1.3 * sb;
@@ -186,18 +211,18 @@ l1.onmousemove = l1.ontouchmove = function(e) {
   sx = nx; sy = ny;
 };
 
-function finishStroke() {
-  dragAva = false;
+function finishStroke(e) {
+  if (e && e.pointerId != null && e.pointerId != activePtr) return;
   if (dr && tl == 'soft') {
     x1.globalCompositeOperation = 'source-over';
     x1.globalAlpha = g('al').value / 100;
     x1.drawImage(ltmp, 0, 0);
     xtmp.clearRect(0, 0, 620, 420);
   }
-  dr = false; x1.globalAlpha = 1;
+  dr = false; activePtr = null; x1.globalAlpha = 1;
 }
-addEventListener('mouseup', finishStroke);
-addEventListener('touchend', finishStroke);
+l1.onpointerup = finishStroke;
+l1.onpointercancel = finishStroke;
 
 var z = 1;
 function zm(d) {
@@ -223,10 +248,3 @@ function tDr() {
   a.forEach(function(u) {
     var im = document.createElement('img'); im.src = u;
     im.onclick = function() {
-      var m = document.createElement('div'); m.className = 'cm'; m.textContent = '🌙 Ты:';
-      var p = document.createElement('img'); p.src = u; m.appendChild(p);
-      g('cf').appendChild(m); g('cf').scrollTop = g('cf').scrollHeight; d.style.display = 'none';
-    };
-    d.appendChild(im);
-  });
-}
