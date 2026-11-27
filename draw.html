@@ -5,63 +5,70 @@
 <title>DreamInk — Студия</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#070a1f;color:#fff;font-family:sans-serif;height:100vh;overflow:hidden;display:flex}
-.lp{width:205px;background:#10163b;border-right:1px solid #4c1d95;padding:6px;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
+body{background:#070a1f;color:#fff;font-family:sans-serif;height:100vh;overflow:hidden;display:flex;padding-bottom:38px}
+.lp{width:200px;background:#10163b;border-right:1px solid #4c1d95;padding:6px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;flex-shrink:0}
 .ml{display:flex;align-items:center;justify-content:space-between;background:#192152;padding:4px 8px;border-radius:8px;font-weight:800;font-size:12px;color:#f0abfc}
 .bk{background:#6d28d9;border:0;color:#fff;padding:3px 7px;border-radius:6px;font-size:10px;cursor:pointer}
-.ww{position:relative;width:130px;height:130px;margin:2px auto;display:flex;align-items:center;justify-content:center}
+.ww{position:relative;width:120px;height:120px;margin:1px auto;display:flex;align-items:center;justify-content:center}
 canvas#cw{border-radius:50%;cursor:crosshair;touch-action:none}
-.sv{position:absolute;width:68px;height:68px;border:2px solid #fff;cursor:crosshair;touch-action:none}
+.sv{position:absolute;width:62px;height:62px;border:2px solid #fff;cursor:crosshair;touch-action:none}
 .sws{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
-.sw{height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.4);cursor:pointer}
+.sw{height:15px;border-radius:50%;border:1px solid rgba(255,255,255,.4);cursor:pointer}
 .tg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
 .tb{background:#1e2761;border:1px solid #4f46e5;color:#fff;padding:5px 0;border-radius:6px;font-size:13px;cursor:pointer;text-align:center}
 .tb.act{background:#ec4899;border-color:#fbcfe8}
 .sls{background:#0b102b;padding:5px 6px;border-radius:8px;display:flex;flex-direction:column;gap:4px;font-size:10px}
 .sr{display:flex;align-items:center;justify-content:space-between;gap:3px}
-.sr input{width:74px;accent-color:#ec4899}
-.cp{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px;gap:4px;overflow:hidden;position:relative}
+.sr input{width:70px;accent-color:#ec4899}
+.cp{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px;gap:4px;overflow:hidden;position:relative}
 .lb{width:100%;display:flex;align-items:center;background:rgba(16,22,59,.9);padding:4px 8px;border-radius:8px;border:1px solid #6366f1;position:relative}
 .hbtn{background:#7c3aed;border:1px solid #f0abfc;color:#fff;padding:4px 12px;border-radius:7px;font-size:11px;font-weight:800;cursor:pointer}
-.hdrop{display:none;position:absolute;top:36px;left:8px;width:190px;background:#131942;border:1px solid #a855f7;border-radius:10px;padding:8px;z-index:20;flex-direction:column;gap:6px}
+.hdrop{display:none;position:absolute;top:34px;left:8px;width:190px;background:#131942;border:1px solid #a855f7;border-radius:10px;padding:8px;z-index:20;flex-direction:column;gap:6px}
 .hrow{display:flex;justify-content:space-between;align-items:center;background:#1e2761;padding:5px 8px;border-radius:7px;font-size:11px}
 .eye{cursor:pointer;font-size:13px}
-.vp{width:100%;flex:1;background:#1e243b;border:2px solid #475569;border-radius:8px;overflow:scroll;display:flex;padding:12px}
-.vp::-webkit-scrollbar{width:12px;height:12px}.vp::-webkit-scrollbar-track{background:#334155}.vp::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:5px}
-.st{position:relative;width:620px;height:420px;flex-shrink:0;margin:auto;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.6)}
+.vp{width:100%;flex:1;background:#1e243b;border:2px solid #475569;border-radius:8px;overflow:scroll;display:block;padding:60px}
+.vp::-webkit-scrollbar{width:13px;height:13px}
+.vp::-webkit-scrollbar-track{background:#334155}
+.vp::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:6px;border:2px solid #334155}
+.vp::-webkit-scrollbar-corner{background:#334155}
+.st{position:relative;width:620px;height:420px;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.6);margin:0 auto}
 .st canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .zb{display:flex;align-items:center;gap:8px;background:#10163b;padding:3px 10px;border-radius:8px;border:1px solid #4c1d95;font-size:11px}
 .zbt{background:#312e81;border:0;color:#fff;width:24px;height:20px;border-radius:5px;font-weight:800;cursor:pointer}
-.rp{width:205px;background:#10163b;border-left:1px solid #4c1d95;padding:6px;display:flex;flex-direction:column;gap:5px;height:100vh}
-.ch{font-weight:800;font-size:12px;color:#f0abfc;border-bottom:1px solid #312e81;padding-bottom:3px}
+.rp{width:205px;background:#10163b;border-left:1px solid #4c1d95;padding:6px;display:flex;flex-direction:column;gap:5px;height:100%;flex-shrink:0;transition:width .2s}
+.rp.collapsed{width:34px;padding:6px 4px;align-items:center}
+.rp.collapsed .cf,.rp.collapsed .sd,.rp.collapsed .ci,.rp.collapsed .ctitle{display:none!important}
+.ch{display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:12px;color:#f0abfc;border-bottom:1px solid #312e81;padding-bottom:4px;width:100%}
+.carrow{background:#312e81;border:1px solid #6366f1;color:#fff;width:24px;height:22px;border-radius:6px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .cf{flex:1;min-height:0;background:#080b21;border-radius:8px;padding:5px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;font-size:11px}
 .cm{background:#1e2761;padding:4px 6px;border-radius:7px;word-break:break-word}
 .cm img{width:46px;height:46px;background:#fff;border-radius:5px;display:block;margin-top:2px}
 .sd{display:none;flex-wrap:wrap;gap:4px;max-height:55px;overflow-y:auto;background:#0b102b;padding:4px;border-radius:6px}
 .sd img{width:30px;height:30px;background:#fff;border-radius:4px;cursor:pointer}
-.ci{display:flex;gap:4px}
+.ci{display:flex;gap:4px;flex-shrink:0}
 .ci input{flex:1;min-width:0;padding:5px;border-radius:6px;border:1px solid #4f46e5;background:#080b21;color:#fff;font-size:11px}
-@media(max-width:700px){body{flex-direction:column;overflow-y:auto;height:auto}.lp,.rp{width:100%;height:auto;border:0}.vp{height:280px}.cf{height:110px}}
+@media(max-width:700px){body{flex-direction:column;overflow-y:auto;height:auto;padding-bottom:45px}.lp,.rp{width:100%;height:auto;border:0}.vp{height:280px;padding:30px}.cf{height:110px}}
 </style>
 </head>
 <body>
 <aside class="lp">
   <div class="ml"><span>🐱 DreamInk</span><button class="bk" onclick="location.href='index.html'">← Меню</button></div>
-  <div class="ww"><canvas id="cw" width="130" height="130"></canvas><div class="sv" id="sv"></div></div>
+  <div class="ww"><canvas id="cw" width="120" height="120"></canvas><div class="sv" id="sv"></div></div>
   <div class="sws" id="sws"></div>
   <div class="tg">
-    <button class="tb act" id="t-brush" onclick="st('brush')">🖌️</button>
-    <button class="tb" id="t-soft" onclick="st('soft')">☁️</button>
-    <button class="tb" id="t-mark" onclick="st('mark')">🖍️</button>
-    <button class="tb" id="t-spray" onclick="st('spray')">💨</button>
-    <button class="tb" id="t-erase" onclick="st('erase')">🧽</button>
-    <button class="tb" id="t-pick" onclick="st('pick')">💉</button>
-    <button class="tb" id="t-fill" onclick="st('fill')">🪣</button>
-    <button class="tb" style="background:#991b1b" onclick="clMy()">🗑️</button>
+    <button class="tb act" id="t-brush" onclick="st('brush')" title="Кисть">🖌️</button>
+    <button class="tb" id="t-soft" onclick="st('soft')" title="Мягкая">☁️</button>
+    <button class="tb" id="t-mark" onclick="st('mark')" title="Маркер">🖍️</button>
+    <button class="tb" id="t-spray" onclick="st('spray')" title="Спрей">💨</button>
+    <button class="tb" id="t-erase" onclick="st('erase')" title="Ластик">🧽</button>
+    <button class="tb" id="t-pick" onclick="st('pick')" title="Пипетка">💉</button>
+    <button class="tb" id="t-fill" onclick="st('fill')" title="Заливка">🪣</button>
+    <button class="tb" style="background:#991b1b" onclick="clMy()" title="Стереть свой">🗑️</button>
   </div>
   <div class="sls">
-    <div class="sr"><span>Размер:</span><input type="range" id="sz" min="1" max="50" value="8"><b id="szv">8</b></div>
-    <div class="sr"><span>Прозр.:</span><input type="range" id="al" min="10" max="100" value="100"><b id="alv">100%</b></div>
+    <div class="sr"><span>Размер:</span><input type="range" id="sz" min="1" max="70" value="14"><b id="szv">14</b></div>
+    <div class="sr"><span>Прозр.:</span><input type="range" id="al" min="5" max="100" value="100"><b id="alv">100%</b></div>
+    <div class="sr"><span>Угол:</span><input type="range" id="ag" min="0" max="180" value="45"><b id="agv">45°</b></div>
     <div class="sr"><span>Стабил.:</span><input type="range" id="sb" min="0" max="90" value="40"><b id="sbv">40%</b></div>
   </div>
 </aside>
@@ -73,11 +80,11 @@ canvas#cw{border-radius:50%;cursor:crosshair;touch-action:none}
       <div class="hrow"><span>🌙 Вы</span><span class="eye" id="eye1" onclick="togEye()">👁️</span></div>
     </div>
   </div>
-  <div class="vp"><div class="st" id="stg"><canvas id="l1" width="620" height="420"></canvas></div></div>
+  <div class="vp" id="vp"><div class="st" id="stg"><canvas id="l1" width="620" height="420"></canvas></div></div>
   <div class="zb"><button class="zbt" onclick="zm(-0.2)">-</button><span id="zv">100%</span><button class="zbt" onclick="zm(0.2)">+</button></div>
 </main>
-<aside class="rp">
-  <div class="ch">💬 Чат:</div>
+<aside class="rp" id="rpanel">
+  <div class="ch"><span class="ctitle">💬 Чат:</span><button class="carrow" id="carrow" onclick="togChat()" title="Свернуть/развернуть чат">▶</button></div>
   <div class="cf" id="cf"></div>
   <div class="sd" id="sdr"></div>
   <div class="ci"><button class="tb" style="font-size:12px;padding:4px 7px" onclick="tDr()">🎨</button><input type="text" id="cin" placeholder="Сообщение..." onkeydown="if(event.key=='Enter')sCh()"><button class="tb" style="font-size:12px;padding:4px 8px" onclick="sCh()">➤</button></div>
